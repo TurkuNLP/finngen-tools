@@ -1,5 +1,5 @@
 import sys
-
+ 
 import datasets
 
 from pathlib import Path
@@ -70,18 +70,26 @@ def timed(f, out=sys.stderr):
 
 @timed
 def load_text(paths, args):
-    texts = []
-    for p in tqdm(paths):
-        with open(p) as f:
-            texts.extend([s for s in f.read().splitlines() if s])
-    print(f'read {len(texts)} lines from {len(paths)} files.')
-    dataset = Dataset.from_dict({
-        'text': texts
-    })
-    datasets = DatasetDict()
-    datasets['train'] = dataset
-    return datasets
-
+    if not args.disable_cache:
+        return load_dataset(
+            'text',
+            data_files=paths
+        )
+    else:
+        # set_caching_enabled(False) of keep_in_memory=True don't
+        # appear to eliminate the intial cached version of the data
+        # that load_dataset creates, so use from_dict instead
+        texts = []
+        for p in tqdm(paths):
+            with open(p) as f:
+                texts.extend([s for s in f.read().splitlines() if s])
+        print(f'read {len(texts)} lines from {len(paths)} files.')
+        dataset = Dataset.from_dict({
+            'text': texts
+        })
+        datasets = DatasetDict()
+        datasets['train'] = dataset
+        return datasets
 
 @timed
 def tokenize_text(data, tokenizer, args):
