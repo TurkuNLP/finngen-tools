@@ -25,12 +25,10 @@ CACHEDIR="/scratch/$SLURM_JOB_ACCOUNT/datasets_cache_$SLURM_JOBID"
 export HF_DATASETS_CACHE="$CACHEDIR"
 echo "CACHE: $HF_DATASETS_CACHE"
 
-############################## TODO UNCOMMENT ##############################
-
-# function on_exit {
-#     rm -f "$CACHEDIR"
-# }
-# trap on_exit EXIT
+function on_exit {
+    rm -f "$CACHEDIR"
+}
+trap on_exit EXIT
 
 NUM_WORKERS=$SLURM_CPUS_PER_TASK
 
