@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Userspace install of deepspeed on a CSC system
+# Userspace install of deepspeed on CSC mahti
 
 #SBATCH --account=project_2004600
 #SBATCH --partition=gputest
