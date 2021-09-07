@@ -2,6 +2,10 @@
 
 # Initialize compute node environment.
 
+# When using deepspeed and pdsh, source this script in
+# deepspeed/launcher/multinode_runner.py before calling
+# deepspeed.launcher.launch.
+
 CSC_ENV_INIT='/appl/profile/zz-csc-env.sh'
 
 if [ -f "$CSC_ENV_INIT" ]; then
