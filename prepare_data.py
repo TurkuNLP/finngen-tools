@@ -1,10 +1,13 @@
 import sys
+import os
+import json
  
 import datasets
 
 from pathlib import Path
 from functools import wraps
 from time import time
+from struct import pack
 from argparse import ArgumentParser
 
 from datasets import Dataset, DatasetDict
@@ -54,6 +57,12 @@ def argparser():
         default=512,
         help='example size in tokens'
     )
+    ap.add_argument(
+        '--binary',
+        default=False,
+        action='store_true',
+        help='save in minimal binary format'
+    )
     return ap
 
 
@@ -76,7 +85,7 @@ def load_text(paths, args):
             data_files=paths
         )
     else:
-        # set_caching_enabled(False) of keep_in_memory=True don't
+        # set_caching_enabled(False) or keep_in_memory=True don't
         # appear to eliminate the intial cached version of the data
         # that load_dataset creates, so use from_dict instead
         texts = []
@@ -90,6 +99,7 @@ def load_text(paths, args):
         datasets = DatasetDict()
         datasets['train'] = dataset
         return datasets
+
 
 @timed
 def tokenize_text(data, tokenizer, args):
@@ -111,7 +121,10 @@ def prepare_examples(data, args):
         # Note: this drops the remainder
         length = (length // args.block_size) * args.block_size
         chunked = {
-            k: [t[i : i + args.block_size] for i in range(0, length, args.block_size)]
+            k: [
+                t[i : i + args.block_size] 
+                for i in range(0, length, args.block_size)
+            ]
             for k, t in concatenated.items()
         }
         chunked['labels'] = chunked['input_ids'].copy()
@@ -125,6 +138,28 @@ def prepare_examples(data, args):
         desc='preparing examples'
     )
 
+
+@timed
+def save_binary(datasets, output_dir):
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
+    
+    for name, dataset in datasets.items():
+        cols = dataset.column_names
+        dim = len(dataset[cols[0]][0])
+        assert all(len(dataset[c][0]) == dim for c in cols)
+
+        with open(os.path.join(output_dir, f'{name}.json'), 'wt') as f:
+            json.dump({
+                'num_rows': dataset.num_rows,
+                'column_names': cols,
+                'dim': dim
+            }, f)
+
+        with open(os.path.join(output_dir, f'{name}.vec'), 'wb') as f:
+            for d in dataset:
+                for c in cols:
+                    f.write(pack(f'<{dim}H', *d[c]))
+
     
 def main(argv):
     args = argparser().parse_args(argv[1:])
@@ -136,7 +171,11 @@ def main(argv):
     if args.disable_cache:
         set_caching_enabled(False)
 
-    paths = [str(x) for x in Path(args.data).glob("**/*.txt")]
+    if os.path.isfile(args.data):
+        paths = [args.data]
+    else:
+        # assume directory
+        paths = [str(p) for p in Path(args.data).glob("**/*.txt")]
     data = load_text(paths, args)
 
     tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
@@ -144,7 +183,10 @@ def main(argv):
     
     data = prepare_examples(data, args)
 
-    data.save_to_disk(args.output_dir)
+    if not args.binary:
+        data.save_to_disk(args.output_dir)
+    else:
+        save_binary(data, args.output_dir)
 
 
 if __name__ == '__main__':
