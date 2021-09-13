@@ -26,7 +26,7 @@ export HF_DATASETS_CACHE="$CACHEDIR"
 echo "CACHE: $HF_DATASETS_CACHE"
 
 function on_exit {
-    rm -f "$CACHEDIR"
+    rm -rf "$CACHEDIR"
 }
 trap on_exit EXIT
 
@@ -35,10 +35,11 @@ NUM_WORKERS=$SLURM_CPUS_PER_TASK
 echo "START $SLURM_JOBID: $(date)"
 
 python prepare_data.py \
-       --data "$DATADIR" \
-       --tokenizer "$TOKENIZER" \
-       --output_dir "$OUTDIR" \
-       --num_workers $NUM_WORKERS
+    --data "$DATADIR" \
+    --tokenizer "$TOKENIZER" \
+    --output_dir "$OUTDIR" \
+    --num_workers $NUM_WORKERS \
+    "$@"
 
 seff $SLURM_JOBID
 
