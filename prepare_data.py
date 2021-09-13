@@ -54,7 +54,7 @@ def argparser():
     ap.add_argument(
         '--block_size',
         type=int,
-        default=512,
+        default=1024,
         help='example size in tokens'
     )
     ap.add_argument(
