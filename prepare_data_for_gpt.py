@@ -3,6 +3,7 @@
 import sys
 import os
 import json
+import tracemalloc
 
 from pathlib import Path
 from functools import wraps
@@ -48,13 +49,25 @@ def argparser():
     return ap
 
 
-def timed(f, out=sys.stderr):
+def bytefmt(i):
+    affix = iter(['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB'])
+    while i > 1024:
+        i /= 1024
+        next(affix)
+    return f'{i:.1f}{next(affix)}'
+
+    
+def monitored(f, out=sys.stderr):
     @wraps(f)
     def wrapper(*args, **kwargs):
+        tracemalloc.start()
         start = time()
         result = f(*args, **kwargs)
-        print(f'{f.__name__} completed in {time()-start:.1f} sec',
+        mem, peak = tracemalloc.get_traced_memory()
+        print(f'{f.__name__} completed in {time()-start:.1f} sec, '
+              f'using {bytefmt(mem)}, peak {bytefmt(peak)}',
               file=out, flush=True)
+        tracemalloc.stop()
         return result
     return wrapper
 
@@ -67,7 +80,7 @@ def log(message):
     print(f'{now()}: {message}', file=sys.stderr, flush=True)
 
 
-@timed
+@monitored
 def load_texts(paths):
     log(f'loading {len(paths)} file(s)')
     texts = []
@@ -77,7 +90,7 @@ def load_texts(paths):
     return texts
 
 
-@timed
+@monitored
 def tokenize_and_vectorize_texts(texts, tokenizer):
     log(f'tokenizing and vectorizing {len(texts)} text(s)')
     vectors = []
@@ -86,7 +99,7 @@ def tokenize_and_vectorize_texts(texts, tokenizer):
     return vectors
 
 
-@timed
+@monitored
 def prepare_examples(vectors, block_size):
     log(f'preparing examples from {len(vectors)} vector(s)')
     concatenated = sum(vectors, [])
@@ -100,7 +113,7 @@ def prepare_examples(vectors, block_size):
     return chunked
 
 
-@timed
+@monitored
 def save_examples(examples, path):
     Path(os.path.dirname(path)).mkdir(parents=True, exist_ok=True)
     dim = len(examples[0])    # assume all equal size
@@ -132,6 +145,10 @@ def main(argv):
     else:
         # assume directory
         paths = [str(p) for p in Path(args.input).glob("**/*.txt")]
+
+    if not paths:
+        print(f'{args.input}: No such file or no .txt files in directory')
+        return 1
 
     log(f'loading tokenizer "{args.tokenizer}"')
     tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
