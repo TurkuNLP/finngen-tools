@@ -5,6 +5,8 @@ import os
 import json
 import tracemalloc
 
+import numpy as np
+
 from pathlib import Path
 from functools import wraps
 from time import time
@@ -41,6 +43,12 @@ def argparser():
         help='example size in tokens'
     )
     ap.add_argument(
+        '--max_lines',
+        type=int,
+        default=1024,
+        help='max number of lines to process at once'
+    )
+    ap.add_argument(
         '--overwrite',
         default=False,
         action='store_true',
@@ -56,7 +64,7 @@ def bytefmt(i):
         next(affix)
     return f'{i:.1f}{next(affix)}'
 
-    
+
 def monitored(f, out=sys.stderr):
     @wraps(f)
     def wrapper(*args, **kwargs):
@@ -80,37 +88,46 @@ def log(message):
     print(f'{now()}: {message}', file=sys.stderr, flush=True)
 
 
-@monitored
-def load_texts(paths):
+def load_texts(paths, max_lines=1000):
     log(f'loading {len(paths)} file(s)')
-    texts = []
-    for path in tqdm(paths):
+    total = 0
+    lines = []
+    for path in paths:
         with open(path) as f:
-            texts.append(f.read())
-    return texts
+            for ln, line in enumerate(f, start=1):
+                lines.append(line)
+                if len(lines) >= max_lines:
+                    yield ''.join(lines)
+                    lines = []
+            if lines:
+                yield ''.join(lines)
+            log(f'loaded {ln} lines(s) from {path}')
+            total += ln
+    log(f'loaded {total} line(s) from {len(paths)} file(s)')
 
 
-@monitored
 def tokenize_and_vectorize_texts(texts, tokenizer):
-    log(f'tokenizing and vectorizing {len(texts)} text(s)')
-    vectors = []
-    for text in tqdm(texts):
-        vectors.append(tokenizer(text).input_ids)
-    return vectors
+    for text in texts:
+        yield tokenizer(text).input_ids
+
+
+def create_blocks(vectors, block_size):
+    concatenated = []
+    for vector in vectors:
+        concatenated += vector
+        while len(concatenated) >= block_size:
+            block, rest = concatenated[:block_size], concatenated[block_size:]
+            concatenated = rest
+            yield np.array(block, dtype='int32')
+    # Note: this drops the remainder
 
 
 @monitored
-def prepare_examples(vectors, block_size):
-    log(f'preparing examples from {len(vectors)} vector(s)')
-    concatenated = sum(vectors, [])
-    length = len(concatenated)
-    # Note: this drops the remainder
-    length = (length // block_size) * block_size
-    chunked = [
-        concatenated[i:i+block_size]
-        for i in tqdm(range(0, length, block_size))
-    ]
-    return chunked
+def prepare_examples(paths, tokenizer, args):
+    texts = load_texts(paths, args.max_lines)
+    vectors = tokenize_and_vectorize_texts(texts, tokenizer)
+    examples = create_blocks(vectors, args.block_size)
+    return list(examples)
 
 
 @monitored
@@ -121,7 +138,7 @@ def save_examples(examples, path):
     log(f'saving {len(examples)} examples to {path}')
     with open(path, 'wb') as f:
         for e in examples:
-            f.write(pack(f'<{dim}H', *e))
+            f.write(pack(f'<{dim}H', *list(e)))
 
     log(f'saving metadata to {path}.json')
     with open(f'{path}.json', 'wt') as f:
@@ -154,18 +171,14 @@ def main(argv):
     tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
 
     log('start processing')
-    texts = load_texts(paths)
+    examples = prepare_examples(paths, tokenizer, args)
 
-    vectors = tokenize_and_vectorize_texts(texts, tokenizer)
-    texts = None    # discard
-
-    examples = prepare_examples(vectors, args.block_size)
-    vectors = None    # discard
-
+    log('shuffling examples')
     shuffle(examples)    # random order
 
+    log('saving')
     save_examples(examples, args.output)
-    log('processing complete')
+    log('done.')
 
 
 if __name__ == '__main__':
