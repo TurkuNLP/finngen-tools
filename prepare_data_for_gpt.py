@@ -4,6 +4,7 @@ import sys
 import os
 import json
 import pickle
+import tracemalloc
 
 import numpy as np
 
@@ -48,6 +49,12 @@ def argparser():
         help='number of examples per batch'
     )
     ap.add_argument(
+        '--max_lines',
+        type=int,
+        default=1024,
+        help='max number of lines to process at once'
+    )
+    ap.add_argument(
         '--overwrite',
         default=False,
         action='store_true',
@@ -56,13 +63,25 @@ def argparser():
     return ap
 
 
-def timed(f, out=sys.stderr):
+def bytefmt(i):
+    affix = iter(['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB'])
+    while i > 1024:
+        i /= 1024
+        next(affix)
+    return f'{i:.1f}{next(affix)}'
+
+
+def monitored(f, out=sys.stderr):
     @wraps(f)
     def wrapper(*args, **kwargs):
+        tracemalloc.start()
         start = time()
         result = f(*args, **kwargs)
-        print(f'{f.__name__} completed in {time()-start:.1f} sec',
+        mem, peak = tracemalloc.get_traced_memory()
+        print(f'{f.__name__} completed in {time()-start:.1f} sec, '
+              f'using {bytefmt(mem)}, peak {bytefmt(peak)}',
               file=out, flush=True)
+        tracemalloc.stop()
         return result
     return wrapper
 
@@ -75,37 +94,38 @@ def log(message):
     print(f'{now()}: {message}', file=sys.stderr, flush=True)
 
 
-@timed
-def load_texts(paths):
+def load_texts(paths, max_lines=1000):
     log(f'loading {len(paths)} file(s)')
-    texts = []
-    for path in tqdm(paths):
+    total = 0
+    lines = []
+    for path in paths:
         with open(path) as f:
-            texts.append(f.read())
-    return texts
+            for ln, line in enumerate(f, start=1):
+                lines.append(line)
+                if len(lines) >= max_lines:
+                    yield ''.join(lines)
+                    lines = []
+            if lines:
+                yield ''.join(lines)
+            log(f'loaded {ln} lines(s) from {path}')
+            total += ln
+    log(f'loaded {total} line(s) from {len(paths)} file(s)')
 
 
-@timed
 def tokenize_and_vectorize_texts(texts, tokenizer):
-    log(f'tokenizing and vectorizing {len(texts)} text(s)')
-    vectors = []
-    for text in tqdm(texts):
-        vectors.append(tokenizer(text).input_ids)
-    return vectors
+    for text in texts:
+        yield tokenizer(text).input_ids
 
 
-@timed
-def prepare_examples(vectors, block_size):
-    log(f'preparing examples from {len(vectors)} vector(s)')
-    concatenated = sum(vectors, [])
-    length = len(concatenated)
+def create_blocks(vectors, block_size):
+    concatenated = []
+    for vector in vectors:
+        concatenated += vector
+        while len(concatenated) >= block_size:
+            block, rest = concatenated[:block_size], concatenated[block_size:]
+            concatenated = rest
+            yield np.array(block, dtype='int32')
     # Note: this drops the remainder
-    length = (length // block_size) * block_size
-    chunked = [
-        concatenated[i:i+block_size]
-        for i in tqdm(range(0, length, block_size))
-    ]
-    return chunked
 
 
 def batch_examples(examples, batch_size=100):
@@ -115,7 +135,15 @@ def batch_examples(examples, batch_size=100):
         }
 
 
-@timed
+@monitored
+def prepare_examples(paths, tokenizer, args):
+    texts = load_texts(paths, args.max_lines)
+    vectors = tokenize_and_vectorize_texts(texts, tokenizer)
+    examples = create_blocks(vectors, args.block_size)
+    return list(examples)
+
+
+@monitored
 def save_examples(examples, path, batch_size):
     Path(os.path.dirname(path)).mkdir(parents=True, exist_ok=True)
     dim = len(examples[0])    # assume all equal size
@@ -148,22 +176,22 @@ def main(argv):
         # assume directory
         paths = [str(p) for p in Path(args.input).glob("**/*.txt")]
 
+    if not paths:
+        print(f'{args.input}: No such file or no .txt files in directory')
+        return 1
+
     log(f'loading tokenizer "{args.tokenizer}"')
     tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
 
     log('start processing')
-    texts = load_texts(paths)
+    examples = prepare_examples(paths, tokenizer, args)
 
-    vectors = tokenize_and_vectorize_texts(texts, tokenizer)
-    texts = None    # discard
-
-    examples = prepare_examples(vectors, args.block_size)
-    vectors = None    # discard
-
+    log('shuffling examples')
     shuffle(examples)    # random order
 
+    log('saving')
     save_examples(examples, args.output, args.batch_size)
-    log('processing complete')
+    log('done.')
 
 
 if __name__ == '__main__':
