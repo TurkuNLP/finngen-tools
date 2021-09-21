@@ -42,6 +42,12 @@ def argparser():
         help='example size in tokens'
     )
     ap.add_argument(
+        '--batch_size',
+        type=int,
+        default=100,
+        help='number of examples per batch'
+    )
+    ap.add_argument(
         '--overwrite',
         default=False,
         action='store_true',
@@ -110,13 +116,13 @@ def batch_examples(examples, batch_size=100):
 
 
 @timed
-def save_examples(examples, path):
+def save_examples(examples, path, batch_size):
     Path(os.path.dirname(path)).mkdir(parents=True, exist_ok=True)
     dim = len(examples[0])    # assume all equal size
 
     log(f'saving {len(examples)} examples to {path}')
     with open(path, 'wb') as f:
-        for batch in batch_examples(examples):
+        for batch in batch_examples(examples, batch_size):
             pickle.dump(batch, f)
 
     log(f'saving metadata to {path}.json')
@@ -156,7 +162,7 @@ def main(argv):
 
     shuffle(examples)    # random order
 
-    save_examples(examples, args.output)
+    save_examples(examples, args.output, args.batch_size)
     log('processing complete')
 
 
