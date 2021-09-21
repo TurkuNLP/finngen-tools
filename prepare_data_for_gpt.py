@@ -3,12 +3,14 @@
 import sys
 import os
 import json
+import pickle
+
+import numpy as np
 
 from pathlib import Path
 from functools import wraps
 from time import time
 from random import shuffle
-from struct import pack
 from datetime import datetime
 from argparse import ArgumentParser
 
@@ -100,6 +102,13 @@ def prepare_examples(vectors, block_size):
     return chunked
 
 
+def batch_examples(examples, batch_size=100):
+    for i in range(0, len(examples), batch_size):
+        yield {
+            'input_ids': np.stack(examples[i:i+batch_size]).astype('<H')
+        }
+
+
 @timed
 def save_examples(examples, path):
     Path(os.path.dirname(path)).mkdir(parents=True, exist_ok=True)
@@ -107,8 +116,8 @@ def save_examples(examples, path):
 
     log(f'saving {len(examples)} examples to {path}')
     with open(path, 'wb') as f:
-        for e in examples:
-            f.write(pack(f'<{dim}H', *e))
+        for batch in batch_examples(examples):
+            pickle.dump(batch, f)
 
     log(f'saving metadata to {path}.json')
     with open(f'{path}.json', 'wt') as f:
