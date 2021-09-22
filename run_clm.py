@@ -21,6 +21,9 @@ https://huggingface.co/models?filter=causal-lm
 """
 # You can also adapt this script on your own causal language modeling task. Pointers for this are left as comments.
 
+# This version of run_clm.py is a modification of the original available from
+# https://github.com/huggingface/transformers/blob/master/examples/pytorch/language-modeling/run_clm.py
+
 import logging
 import math
 import os
@@ -174,6 +177,13 @@ class DataTrainingArguments:
     )
     keep_linebreaks: bool = field(
         default=True, metadata={"help": "Whether to keep line breaks when using TXT files or not."}
+    )
+    preprocessed: bool = field(
+        default=False,
+        metadata={
+            "help": "Whether the data is already preprocessed. "
+            "If true, tokenization and grouping are skipped."
+        }
     )
 
     def __post_init__(self):
@@ -378,15 +388,18 @@ def main():
             )
         return output
 
-    with training_args.main_process_first(desc="dataset map tokenization"):
-        tokenized_datasets = raw_datasets.map(
-            tokenize_function,
-            batched=True,
-            num_proc=data_args.preprocessing_num_workers,
-            remove_columns=column_names,
-            load_from_cache_file=not data_args.overwrite_cache,
-            desc="Running tokenizer on dataset",
-        )
+    if data_args.preprocessed:
+        tokenized_datasets = raw_datasets    # already tokenized
+    else:
+        with training_args.main_process_first(desc="dataset map tokenization"):
+            tokenized_datasets = raw_datasets.map(
+                tokenize_function,
+                batched=True,
+                num_proc=data_args.preprocessing_num_workers,
+                remove_columns=column_names,
+                load_from_cache_file=not data_args.overwrite_cache,
+                desc="Running tokenizer on dataset",
+            )
 
     if data_args.block_size is None:
         block_size = tokenizer.model_max_length
@@ -428,14 +441,17 @@ def main():
     # To speed up this part, we use multiprocessing. See the documentation of the map method for more information:
     # https://huggingface.co/docs/datasets/package_reference/main_classes.html#datasets.Dataset.map
 
-    with training_args.main_process_first(desc="grouping texts together"):
-        lm_datasets = tokenized_datasets.map(
-            group_texts,
-            batched=True,
-            num_proc=data_args.preprocessing_num_workers,
-            load_from_cache_file=not data_args.overwrite_cache,
-            desc=f"Grouping texts in chunks of {block_size}",
-        )
+    if data_args.preprocessed:
+        lm_datasets = tokenized_datasets    # already grouped
+    else:
+        with training_args.main_process_first(desc="grouping texts together"):
+            lm_datasets = tokenized_datasets.map(
+                group_texts,
+                batched=True,
+                num_proc=data_args.preprocessing_num_workers,
+                load_from_cache_file=not data_args.overwrite_cache,
+                desc=f"Grouping texts in chunks of {block_size}",
+            )
 
     if training_args.do_train:
         if "train" not in tokenized_datasets:
