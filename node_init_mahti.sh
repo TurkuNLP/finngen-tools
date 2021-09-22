@@ -18,3 +18,4 @@ fi
 
 module purge
 module load gcc/10.3.0 cuda/11.2.2 pytorch/1.9
+export SING_IMAGE=/appl/soft/ai/singularity/images/pytorch_1.9.0_csc_custom.sif
