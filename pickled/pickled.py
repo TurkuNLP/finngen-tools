@@ -39,7 +39,13 @@ class PickledDatasetIterator:
     def __next__(self):
         if self.batch_offset >= self.batch_size:
             self._load_batch()
-        d = { k: self.batch[k][self.batch_offset] for k in self.keys }
+        d = { 
+            k: self.batch[k][self.batch_offset].tolist()
+            for k in self.keys 
+        }
+        # TODO add parameter controlling addition of labels
+        if 'labels' not in d:
+            d['labels'] = d['input_ids']
         self.batch_offset += 1
         return d
 
@@ -47,14 +53,23 @@ class PickledDatasetIterator:
 class PickledDataset(IterableDataset):
     def __init__(self, filepath):
         self.filepath = filepath
+        self._column_names = None
 
     def __iter__(self):
         return PickledDatasetIterator(self.filepath)
 
+    @property
+    def column_names(self):
+        if self._column_names is None:
+            example = next(iter(self))
+            self._column_names = list(example.keys())
+        return self._column_names
 
-class Pickled(datasets.DatasetBuilder):
+
+class PickledDatasetBuilder(datasets.DatasetBuilder):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        print(kwargs)
         self.data_dir = kwargs['data_dir']
         self.split_paths = {}
         
