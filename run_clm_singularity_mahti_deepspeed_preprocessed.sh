@@ -2,18 +2,19 @@
 
 #SBATCH --account=project_2004600
 #SBATCH --partition=gpumedium
-#SBATCH --time=24:00:00
+#SBATCH --time=36:00:00
 #SBATCH --nodes=4
 #SBATCH --gres=gpu:a100:4
 #SBATCH --output=logs/%j.out
 #SBATCH --error=logs/%j.err
 
 DATA_DIR=data
-OUTPUT_DIR=output
-PER_GPU_BATCH_SIZE=8
+OUTPUT_DIR=output-gptsmall
 NUM_EPOCHS=10
-GRADIENT_ACCUMULATION_STEPS=4
+
+PER_GPU_BATCH_SIZE=8
 BASE_LEARNING_RATE=5e-05
+GRADIENT_ACCUMULATION_STEPS=4
 
 GPUS_PER_NODE=4
 
@@ -115,3 +116,5 @@ echo "START $SLURM_JOBID: $(date)"
     --deepspeed ds_config.json
 
 echo "END $SLURM_JOBID: $(date)"
+
+seff $SLURM_JOBID | tee seff.txt
