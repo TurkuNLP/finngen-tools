@@ -113,6 +113,7 @@ echo "START $SLURM_JOBID: $(date)"
     --gradient_accumulation_steps "$GRADIENT_ACCUMULATION_STEPS" \
     --learning_rate "$LEARNING_RATE" \
     --output_dir "$OUTPUT_DIR" \
+    --fp16 \
     --deepspeed ds_config.json
 
 echo "END $SLURM_JOBID: $(date)"
