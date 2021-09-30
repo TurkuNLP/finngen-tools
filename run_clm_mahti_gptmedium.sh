@@ -13,7 +13,7 @@ DATA_DIR=data
 OUTPUT_DIR=output-gptmedium
 NUM_EPOCHS=10
 
-PER_GPU_BATCH_SIZE=3
+PER_GPU_BATCH_SIZE=6
 BASE_LEARNING_RATE=3e-05
 GRADIENT_ACCUMULATION_STEPS=8
 CONFIG_OVERRIDES="n_embd=1024,n_head=16,n_layer=24"
@@ -40,7 +40,7 @@ echo "Native pdsh      : $(which pdsh)"
 echo "Singularity pdsh : $(python -c 'import shutil; print(shutil.which("pdsh"))')"
 
 # Start from scratch
-#rm -rf "$OUTPUT_DIR"
+rm -rf "$OUTPUT_DIR"
 
 # Link logs as latest.out and latest.err
 rm -f logs/latest.out logs/latest.err
@@ -120,7 +120,8 @@ echo "START $SLURM_JOBID: $(date)"
     --gradient_accumulation_steps "$GRADIENT_ACCUMULATION_STEPS" \
     --learning_rate "$LEARNING_RATE" \
     --output_dir "$OUTPUT_DIR" \
-    --deepspeed ds_config.json
+    --deepspeed ds_config.json \
+    --fp16
 
 echo "END $SLURM_JOBID: $(date)"
 
