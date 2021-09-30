@@ -6,7 +6,7 @@ import sys
 import re
 
 
-FLOPS_RE = re.compile(r'^FLOPS per GPU = .*:\s*([0-9.]+) (\S+FLOPS)$')
+FLOPS_RE = re.compile(r'^(?:\S+: )?FLOPS per GPU = .*:\s*([0-9.]+) (\S+FLOPS)$')
 
 
 PREFIX_MULTIPLIER = {
