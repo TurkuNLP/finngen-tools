@@ -3,7 +3,7 @@
 #SBATCH --account=project_2004600
 #SBATCH --partition=gpumedium
 #SBATCH --time=36:00:00
-#SBATCH --nodes=4
+#SBATCH --nodes=6
 #SBATCH --gres=gpu:a100:4
 #SBATCH --output=logs/%j.out
 #SBATCH --error=logs/%j.err
@@ -12,8 +12,8 @@ DATA_DIR=data
 OUTPUT_DIR=output-gptsmall
 NUM_EPOCHS=10
 
-PER_GPU_BATCH_SIZE=8
-BASE_LEARNING_RATE=5e-05
+PER_GPU_BATCH_SIZE=16
+BASE_LEARNING_RATE=5e-5
 GRADIENT_ACCUMULATION_STEPS=4
 
 GPUS_PER_NODE=4
