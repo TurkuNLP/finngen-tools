@@ -13,7 +13,7 @@ OUTPUT_DIR=output-gptsmall
 NUM_EPOCHS=10
 
 PER_GPU_BATCH_SIZE=16
-BASE_LEARNING_RATE=5e-5
+BASE_LEARNING_RATE=3e-5
 GRADIENT_ACCUMULATION_STEPS=4
 
 GPUS_PER_NODE=4
@@ -108,7 +108,7 @@ echo "START $SLURM_JOBID: $(date)"
     --save_steps 1000 \
     --evaluation_strategy "steps" \
     --eval_steps 1000 \
-    --save_total_limit 5 \
+    --save_total_limit 20 \
     --per_device_train_batch_size "$PER_GPU_BATCH_SIZE" \
     --gradient_accumulation_steps "$GRADIENT_ACCUMULATION_STEPS" \
     --learning_rate "$LEARNING_RATE" \
