@@ -1,4 +1,5 @@
 import math
+import logging
 
 from transformers.trainer_callback import TrainerCallback
 
@@ -12,5 +13,5 @@ class StopOnNonFiniteCallback(TrainerCallback):
             raise ValueError(f'did not find {metric}')
 
         if math.isinf(value) or math.isnan(value):
-            logger.warning(f'{metric} not finite, stopping: {value}')
+            logging.warning(f'{metric} not finite, stopping: {value}')
             control.should_training_stop = True
