@@ -1,10 +1,9 @@
 #!/bin/bash
 
-#SBATCH --account=project_2004407
-##SBATCH --account=project_2004600
+#SBATCH --account=project_2004600
 #SBATCH --partition=gpumedium
 #SBATCH --time=36:00:00
-#SBATCH --nodes=4
+#SBATCH --nodes=6
 #SBATCH --gres=gpu:a100:4
 #SBATCH --output=logs/%j.out
 #SBATCH --error=logs/%j.err
@@ -13,8 +12,8 @@ DATA_DIR=data
 OUTPUT_DIR=output-gptmedium
 NUM_EPOCHS=10
 
-PER_GPU_BATCH_SIZE=6
-BASE_LEARNING_RATE=3e-05
+PER_GPU_BATCH_SIZE=7
+BASE_LEARNING_RATE=5e-6
 GRADIENT_ACCUMULATION_STEPS=8
 CONFIG_OVERRIDES="n_embd=1024,n_head=16,n_layer=24"
 
@@ -61,9 +60,13 @@ rm -f hostfiles/latest.txt
 ln -s $SLURM_JOBID.txt hostfiles/latest.txt
 echo "$NODELIST" | perl -pe 's/$/ slots='"$GPUS_PER_NODE"'/' > "$HOSTFILE"
 
-echo -n "Counting number of training examples..." >&2
+echo -n "Counting number of training and eval examples..." >&2
 TRAIN_EXAMPLES=$(
     python pickled_stats.py "$DATA_DIR/train.pickle" 2>/dev/null |
+    egrep 'TOTAL$' | perl -pe 's/.*?(\d+) TOTAL/$1/'
+)
+EVAL_EXAMPLES=$(
+    python pickled_stats.py "$DATA_DIR/dev.pickle" 2>/dev/null |
     egrep 'TOTAL$' | perl -pe 's/.*?(\d+) TOTAL/$1/'
 )
 echo "done." >&2
@@ -86,6 +89,7 @@ LEARNING_RATE=$(python -c 'print('"$BASE_LEARNING_RATE"'*'"$NUM_NODES"'*'"$GRADI
 cat <<EOF
 ------------------------------------------------------------------------------
 TRAIN_EXAMPLES ................ $TRAIN_EXAMPLES
+EVAL_EXAMPLES ................. $EVAL_EXAMPLES
 NUM_EPOCHS .................... $NUM_EPOCHS
 PER_GPU_BATCH_SIZE ............ $PER_GPU_BATCH_SIZE
 NUM_GPUS ...................... $NUM_GPUS
@@ -117,11 +121,12 @@ echo "START $SLURM_JOBID: $(date)"
     --eval_steps 1000 \
     --save_total_limit 20 \
     --per_device_train_batch_size "$PER_GPU_BATCH_SIZE" \
+    --per_device_eval_batch_size "$PER_GPU_BATCH_SIZE" \
     --gradient_accumulation_steps "$GRADIENT_ACCUMULATION_STEPS" \
     --learning_rate "$LEARNING_RATE" \
     --output_dir "$OUTPUT_DIR" \
-    --deepspeed ds_config.json \
-    --fp16
+    --fp16 \
+    --deepspeed ds_config.json
 
 echo "END $SLURM_JOBID: $(date)"
 
