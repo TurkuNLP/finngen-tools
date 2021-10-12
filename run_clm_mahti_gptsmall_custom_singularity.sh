@@ -1,5 +1,4 @@
 #!/bin/bash
-
 #SBATCH --account=project_2004407
 #SBATCH --partition=gpumedium
 #SBATCH --time=36:00:00
