@@ -52,6 +52,8 @@ from transformers.trainer_utils import get_last_checkpoint
 from transformers.utils import check_min_version
 from transformers.utils.versions import require_version
 
+from util import StopOnNonFiniteCallback
+
 
 # Will error if the minimal version of Transformers is not installed. Remove at your own risks.
 check_min_version("4.11.0.dev0")
@@ -475,6 +477,10 @@ def main():
         if data_args.max_eval_samples is not None:
             eval_dataset = eval_dataset.select(range(data_args.max_eval_samples))
 
+    callbacks = [
+        StopOnNonFiniteCallback()
+    ]
+
     # Initialize our Trainer
     trainer = Trainer(
         model=model,
@@ -484,6 +490,7 @@ def main():
         tokenizer=tokenizer,
         # Data collator will default to DataCollatorWithPadding, so we change it.
         data_collator=default_data_collator,
+        callbacks=callbacks
     )
 
     # Training
