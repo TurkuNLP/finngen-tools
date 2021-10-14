@@ -53,6 +53,10 @@ def main(argv):
                 strings.append(f'{value} {units}')
                 values.append(to_float(float(value), units[0]))
 
+    if not values:
+        print('No FLOPS values found in', ' '.join(argv[1:]), file=sys.stderr)
+        return 1
+
     total, count = sum(values), len(values)
     print(f'{count} values:', ' '.join(strings))
     print(f'Average: {siformat(total/count)}FLOPS')
