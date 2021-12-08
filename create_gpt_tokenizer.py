@@ -5,13 +5,14 @@ from tokenizers.decoders import ByteLevel as ByteLevelDecoder
 from tokenizers.normalizers import NFKC, Sequence
 from tokenizers.pre_tokenizers import ByteLevel
 from tokenizers.trainers import BpeTrainer
+from transformers import PreTrainedTokenizerFast
 import argparse
 
 
 __author__ = "Risto Luukkonen"
 
 
-class BPE_token(object):
+class BPETokenizer(object):
     def __init__(self):
         self.tokenizer = Tokenizer(BPE())
         self.tokenizer.normalizer = Sequence([
@@ -30,7 +31,10 @@ class BPE_token(object):
         if vocab_only:
            self.tokenizer.model.save(location)
         else:
-             self.tokenizer.save(location+".json")
+            fast_tokenizer = PreTrainedTokenizerFast(
+                tokenizer_object=self.tokenizer
+            )
+            fast_tokenizer.save_pretrained(location)
 
 
 def main():
@@ -56,7 +60,7 @@ def main():
     else:
         paths = [args.data]
 
-    tokenizer = BPE_token()
+    tokenizer = BPETokenizer()
     # train the tokenizer model
     tokenizer.bpe_train(args.vocab_size, paths)
     # saving the tokenized data in our specified folder
