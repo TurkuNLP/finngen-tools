@@ -5,7 +5,7 @@ import datasets
 
 from dataclasses import dataclass
 from typing import Optional
-
+import json
 from torch.utils.data import IterableDataset
 from datasets import IterableDatasetDict
 from datasets.splits import Split, SplitDict, SplitGenerator
@@ -52,11 +52,30 @@ class PickledDatasetIterator:
 
 class PickledDataset(IterableDataset):
     def __init__(self, filepath):
+        super().__init__()
         self.filepath = filepath
         self._column_names = None
+        try:
+            with open(self.filepath+'.json') as f:
+                stats = json.loads(f.read())
+                print(stats)
+                self.size = stats['total_count']
+        except:
+            self.size = 0
+        
 
+    def __len__(self):
+        return self.size
+               
     def __iter__(self):
         return PickledDatasetIterator(self.filepath)
+    
+#    def __len__(self):
+#        return self.dataset_size
+
+#    def set_len(self, dataset_size):
+#        print("dataset length set to ",dataset_size)
+#        self.dataset_size = dataset_size
 
     @property
     def column_names(self):
