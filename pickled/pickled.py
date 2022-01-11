@@ -12,7 +12,8 @@ from datasets.splits import Split, SplitDict, SplitGenerator
 
 
 logger = datasets.utils.logging.get_logger(__name__)
-
+RANDOM_SHORT_SEQUENCES = True
+SHORT_SEQ_PROB = 0.1
 
 class PickledDatasetIterator:
     def __init__(self, filepath):
@@ -43,6 +44,13 @@ class PickledDatasetIterator:
             k: self.batch[k][self.batch_offset].tolist()
             for k in self.keys 
         }
+
+        max_num_tokens = len(d['input_ids'])
+        target_seq_length = max_num_tokens
+        if RANDOM_SHORT_SEQUENCES and random.random() < SHORT_SEQ_PROB:
+            target_seq_length = random.randint(2, max_num_tokens)
+            d['input_ids'] = d['input_ids'][:target_seq_length] # cut only from input_ids, not labels. Else tokenizer.pad() will fail. It adds attention_mask.
+
         # TODO add parameter controlling addition of labels
         if 'labels' not in d:
             d['labels'] = d['input_ids']
