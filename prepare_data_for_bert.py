@@ -105,7 +105,7 @@ def load_texts(paths, max_lines=1000):
     total = 0
     lines = []
     for path in paths:
-        with open(path) as f:
+        with open(path, encoding="utf8", errors='ignore') as f: # omit invalid characters such as zero width space (U+200b)
             for ln, line in enumerate(f, start=1):
                 
                 lines.append(line)
