@@ -1,0 +1,79 @@
+import random
+import tracemalloc
+from functools import wraps
+from time import time
+
+from datasets import load_dataset
+from argparse import ArgumentParser
+import sys
+import pickle
+import numpy as np
+from pathlib import Path
+import os
+import json
+
+def argparser():
+    ap = ArgumentParser()
+    ap.add_argument('--data_dir', required=True)
+    return ap
+
+def monitored(f, out=sys.stderr):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        tracemalloc.start()
+        start = time()
+        result = f(*args, **kwargs)
+        mem, peak = tracemalloc.get_traced_memory()
+        print(f'{f.__name__} completed in {time()-start:.1f} sec, '
+              f'using {bytefmt(mem)}, peak {bytefmt(peak)}',
+              file=out, flush=True)
+        tracemalloc.stop()
+        return result
+    return wrapper
+
+def bytefmt(i):
+    affix = iter(['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB'])
+    while i > 1024:
+        i /= 1024
+        next(affix)
+    return f'{i:.1f}{next(affix)}'
+
+
+@monitored
+def main(argv):
+    args = argparser().parse_args(argv[1:])
+    dataset = load_dataset('pickled', data_dir=args.data_dir)
+    save_path = 'temp-testfiles/data/temp/'
+    Path(os.path.dirname(save_path)).mkdir(parents=True, exist_ok=True)
+    seq_len = len(next(iter(dataset['train']))['input_ids'])
+    for split in ['train', 'validation'][::-1]:
+        split_len = len(dataset[split])
+        data = np.empty([split_len, seq_len], dtype=np.uint16)
+        for i, row in enumerate(dataset[split]):
+            data[i] = row['input_ids']
+            print(i, end='\r')
+
+        random.shuffle(data)
+
+        output = {"input_ids": data}
+        # requirement for naming from from pickled/pickle.py
+        if split == 'validation':
+            split = 'dev'
+        outname = save_path + f'{split}.pickle'
+
+        with open(outname+'json', 'wt') as outfile:
+            json.dump({
+                "counts": {
+                    "dims": [seq_len],
+                },
+                "total_count": split_len,
+            }, outfile, indent=2)
+
+        del data
+        with open(outname, 'wb') as f:
+            pickle.dump(output, f)
+            print(f"Created file {outname}")
+
+
+if __name__ =='__main__':
+    sys.exit(main(sys.argv))
