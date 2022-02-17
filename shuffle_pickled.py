@@ -66,12 +66,12 @@ def main(argv):
                 "counts": {
                     "dims": [seq_len],
                 },
-                "total_count": split_len,
+                "TOTAL": split_len,
             }, outfile, indent=2)
 
         with open(outname, 'wb') as f:
             for i in range(0, len(data), chunk_size):
-                print(data[i:i+chunk_size])
+                #print(data[i:i+chunk_size])
                 pickle.dump({'input_ids': np.stack(data[i:i+chunk_size]).astype('<H')}, f)
             print(f"Created file {outname}")
 
