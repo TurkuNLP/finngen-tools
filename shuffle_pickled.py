@@ -39,9 +39,9 @@ def bytefmt(i):
         next(affix)
     return f'{i:.1f}{next(affix)}'
 
-
 @monitored
 def main(argv):
+    chunk_size = 100
     args = argparser().parse_args(argv[1:])
     dataset = load_dataset('pickled', data_dir=args.input_path)
     save_path = args.output_path
@@ -54,15 +54,14 @@ def main(argv):
             data[i] = row['input_ids']
             print(i, end='\r')
 
-        random.shuffle(data)
+        np.random.shuffle(data)
 
-        output = {"input_ids": data}
         # requirement for naming from from pickled/pickle.py
         if split == 'validation':
             split = 'dev'
         outname = save_path + f'{split}.pickle'
 
-        with open(outname+'json', 'wt') as outfile:
+        with open(outname+'.json', 'wt') as outfile:
             json.dump({
                 "counts": {
                     "dims": [seq_len],
@@ -70,11 +69,11 @@ def main(argv):
                 "total_count": split_len,
             }, outfile, indent=2)
 
-        del data
         with open(outname, 'wb') as f:
-            pickle.dump(output, f)
+            for i in range(0, len(data), chunk_size):
+                print(data[i:i+chunk_size])
+                pickle.dump({'input_ids': np.stack(data[i:i+chunk_size]).astype('<H')}, f)
             print(f"Created file {outname}")
-
 
 if __name__ =='__main__':
     sys.exit(main(sys.argv))
