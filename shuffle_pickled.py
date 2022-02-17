@@ -13,8 +13,9 @@ import os
 import json
 
 def argparser():
-    ap = ArgumentParser()
-    ap.add_argument('--data_dir', required=True)
+    ap = ArgumentParser(description='Shuffle and save pickled data. Reads the whole dataset into a numpy.array, shuffles it and then pickles it.')
+    ap.add_argument('--input_path', required=True, help="Directory containing pickled data that is read with 'pickled' using datasets.load_dataset")
+    ap.add_argument('--output_path', required=True, help="Directory to save shuffled files 'dev.pickle' and 'train.pickle'")
     return ap
 
 def monitored(f, out=sys.stderr):
@@ -42,8 +43,8 @@ def bytefmt(i):
 @monitored
 def main(argv):
     args = argparser().parse_args(argv[1:])
-    dataset = load_dataset('pickled', data_dir=args.data_dir)
-    save_path = 'temp-testfiles/data/temp/'
+    dataset = load_dataset('pickled', data_dir=args.input_path)
+    save_path = args.output_path
     Path(os.path.dirname(save_path)).mkdir(parents=True, exist_ok=True)
     seq_len = len(next(iter(dataset['train']))['input_ids'])
     for split in ['train', 'validation'][::-1]:
