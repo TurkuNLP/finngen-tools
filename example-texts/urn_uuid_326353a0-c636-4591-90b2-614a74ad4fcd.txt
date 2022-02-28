@@ -1,0 +1,37 @@
+Verkkosivustomme osoite on: http://tyynyjaliina.fi.
+Yhteystiedot:
+Tyyny ja Liina
+Mattisentie 16
+13500 Hämeenlinna
+Puhelin: 0405174258
+Yhteyshenkilö: Erika Romo
+Sähköposti: tyynyjaliina@gmail.com
+Y-tunnus: 2848867-7
+ALV-tunnus: FI28488677
+Tilauksenteon yhteydessä keräämme ne henkilötiedot, mitkä on ilmoitettu tilauslomakkeella tai rekisteröityneiden jäsenten profiili-näkymässä. Säilytämme tilaustiedot ja tilausten yhteydessä annetut henkilötiedot 5 vuotta tilauksen tekemisestä. Käytämme henkilötietoja vain sen verran, mitä tilauksen prosessoiminen ja toimittaminen vaatii. Emme välitä tietoja kolmansille osapuolille.
+Kun sivuston käyttäjät jättävät kommentteja sivustolle, keräämme kommenttilomakkeessa olevat tiedot, sekä käyttäjän IP-osoitteen ja selaimen versiotiedot roskaviestien tunnistamisen helpottamiseksi.
+Kun vierailijat jättävät kommentin tälle sivustolle keräämme tiedon, joka on näkyvissä kommentointikentissä, IP-osoitteen sekä selaimen versioon liittyvät tiedot. Sähköpostiosoitteesta luotu anonymisoitu hajautustieto (hash) voidaan lähettää Gravatar-palveluun, jotta tiedetään onko kommentoija palvelun käyttäjä. Gravatar-palvelun tietosuojaseloste löytyy osoitteesta https://automattic.com/privacy/.
+Mikäli lataat kuvia tälle sivustolle, sinun tulee välttää sellaisten kuvien lataamista, joissa on tallennettu paikkatieto (EXIF GPS). Sivuston vierailijat voivat ladata ja katsoa paikkatietoa kuvista, joita sivustolla on.
+Jos jätät kommentin sivustolle, voit valita nimen, sähköpostiosoitteen ja url-osoitteen tallennuksen evästeeseen. Tämä toiminto lisää käyttömukavuutta, koska lomaketta ei tarvitse täyttää jokaisella kerralla uudelleen kommenttia lisätessä. Evästetieto poistetaan selaimesta vuoden kuluttua.
+Mikäli sinulla on tili ja kirjaudut sivustolle asetamme väliaikaisen evästeen, joka päättelee tukeeko selaimesi evästeitä vai ei. Tämä eväste ei sisällä henkilötietoa ja se poistetaan kun selainikkuna suljetaan.
+Kun kirjaudut sisään asetamme useita evästeitä, jotka tallentavat kirjautumis- sekä näyttöasetuksesi. Kirjautumisevästeet poistetaan kahden vuorokauden kuluessa, näyttöasetuksiin liittyvät evästeet poistuvat vuoden päästä. Mikäli valitset “Muista minut” kirjautumisen yhteydessä, kirjautumistietojasi säilytetään kahden viikon ajan. Mikäli kirjaudut ulos, kirjautumiseen liittyvät evästeet poistetaan samassa yhteydessä.
+Mikäli julkaiset artikkelin tai muokkaat olemassa olevaa tallennamme selaimeen evästeen, joka sisältää muokattavan artikkelin ID:n. Eväste vanhenee yhdessä vuorokaudessa.
+Tämän sivuston artikkelit voivat sisältää upotettua sisältöä (esimerkiksi videoita, kuvia, artikkeleita jne.). Toisilta sivustoilta tuodun upotetun sisällön avaaminen on verrattavissa siihen, että vierailija itse kävisi kolmannen osapuolen sivustolla.
+Nämä sivustot voivat kerätä tietoa sinusta, käyttää evästeitä, upottaa kolmannen osapuolen seurantaevästeitä ja monitoroida vuorovaikutustasi upotetun sisällön kanssa, mukaan lukien vuorovaikutuksen seuranta jos ja kun olet kirjautunut käyttäjänä sivustolle.
+Analysoimme käyttäjätietoja GoogleAnalytics -ohjelmaa käyttäen. Analytiikkaa käytetään paremman ostokokemuksen saavuttamiseksi.
+Emme jaa tietojasi kolmansille osapuolille.
+Tilaustietoja säilytämme 5 vuotta tilauksen tekemisestä,tämän jälkeen poistamme tiedot. Mikäli jätät kommentin, kommenttia ja sen metatietoa säilytetään toistaiseksi. Tämä tehdään siksi, että voimme tunnistaa ja hyväksyä seuraavat kommentit automaattisesti sen sijaan, että säilyttäisimme ne moderointijonossa.
+Tallennamme rekisteröityneiden käyttäjien (jos sellaisia on) käyttäjäprofiilien tiedot. Kaikilla käyttäjillä on mahdollisuus nähdä, muokata ja poistaa omia henkilötietojaan milloin vain. Ainoastaan käyttäjänimeä ei voi muuttaa. Verkkosivuston ylläpitäjät voivat nähdä ja muokata käyttäjäprofiilien tietoja.
+Mikäli sinulla on käyttäjätili tälle sivustolle tai olet jättänyt kommentteja, voit pyytää koostetiedostoa omista henkilötiedoistasi, sisältäen kaiken henkilötiedon, jonka olet meille antanut. Voit myös pyytää henkilötietojesi poistoa. Oikeus omien tietojen poistoon ei koske sellaista henkilötietoa, joka meidän on säilytettävä ylläpidollisista, juridisista tai tietoturvaan liittyvistä syistä.
+Vierailijoiden kommentteja saatetaan tarkistaa automatisoidun roskapostiestopalvelun kautta.
+Tietoja säilytetään salasanalla suojattuna. Pyrimme keräämään vain pakollisia tietoja ja säilyttämään niitä turvallisesti.
+Kun vierailet tällä sivustolla, seuraamme:
+Käytämme evästeitä myös jotta säilytät ostoskorin sisällön kun selaat sivustoa.
+Kun ostat meiltä, pyydämme tietoja kuten nimi, laskutusosoite, toimitusosoite, sähköpostiosoite, puhelinnumero, tai maksamisen tiedot ja valinnaiset käyttäjätilin tiedot kuten käyttäjätunnus ja salasana. Käytämme näitä tietoja tarkoituksiin kuten :
+Jos luot tilin, tallennamme nimen, osoitteen, sähköpostiosoitteen ja puhelinnumeron joita käytetään kassalla täyttämään kenttiä tulevissa tilauksissa.
+Yleensä säilytämme tietojasi niin kauan kuin tarvitsemme niitä niihin tarkoituksiin joita varten keräämme tiedot ja käytämme tietoja ja niin kauan kuin meidän on ne lain mukaan säilytettävä. Esimerkiksi, säilytämme kaupan tiedot 5 vuodeksi verotusta ja kirjanpitoa varten.Tämä sisältää nimen, sähköpostiosoitteen ja laskutus- ja toimitusosoitteet.
+Tallennamme myös kaupan kommentit ja tuotearvioinnit jos kirjoitat sellaisia.
+Kun valitset maksutavaksi Klarnan (Klarna Payments), saa Klarna seuraavat tiedot tilauksestasi: tuotteiden nimet, hinnat, määrät, tuotenumerot sekä tilauksentekijän toimitus- ja laskutustiedot ja sähköpostiosoitteen. Klarna puolestaan lähettää meille maksutapahtumanumeron, mitä säilytetään tilauksen tietojen yhteydessä.
+Kun valitset maksutavaksi PayPalin (PayPal Checkout), saa PayPal seuraavat tiedot tilauksestasi: tuotteiden nimet, hinnat, määrät, tuotenumerot sekä tilauksentekijän toimitus- ja laskutustiedot ja sähköpostiosoitteen. Lisätietoja PayPalin tietosuojaselosteessa: https://www.paypal.com/uk/webapps/mpp/ua/privacy-prev#2
+Tiimimme jäsenet pääsevät tietoihin joita annat meille. Tällä hetkellä tiimimme sisältää kaksi henkilöä; verkkosivujen ylläpitäjän sekä kauppiaan.
+Comments are closed.

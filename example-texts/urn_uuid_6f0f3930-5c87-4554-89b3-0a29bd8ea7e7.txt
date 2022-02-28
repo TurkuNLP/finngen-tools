@@ -1,0 +1,21 @@
+Projektia on jo aloiteltu. Eli en rupea laittamaan isompaa sylinteriä vaan ideana on saada vakiosylinteristä kaikki irti mitä itse osaan ottaa, ja mitä työkaluilla saa. Lähinnä noilla työkaluilla tarkoitan sitä, että en pysty viilaamaan huuhteluja sylinteriputken puolelta kun en omista mitään hammasläähärinporaa/omatekemää minivinkua. Sellaisen minivingunkin aajattelin joskus tehdä, mutta saapa nähdä.
+Tässä kaikkea mitä olen jo tehnyt, ja kerron samalla mitä tulen tekemään:
+Sylinteristähän on jo huuhtelut viilattu, joten avarsin lohkoista huuhtelujen lähdöt. Reunat natsaa portaattomasti pyttyyn. Kuvissa vasta raakatyöstö.
+(huono kuva, sori)
+Vanha phva dellorto saa väistyä uuden kaasarin tieltä, tillotsin 19mm kalvokaasari astuu tilalle.
+Mielessä on myös hullu ajatus, jospa muuttaisin moottorin täysläppikseksi.
+Sähköiksi ostan innerotor-kitin, jos keksin miten saan valoihin virtaa, kun ei tuossa kitissä ole valopuolaa.
+Männäksi tulee L-profiili renkailla varustettu mäntä.
+Pakoaukko on ihan sopivaksi jo viilattu, siihen ei tarvitse koskea.
+Mietin myös jos laittaisin vaikka 0,5mm tai 0,25mm kuparipellistä pytyn alle korokkeen, ja samallahan se toimii vissiin tiivisteenä. huuhtelut kun ei aukea kokonaan, niin korottaisi sitä sen puoli milliä niin johan aukee vielä kun mäntää viilaa (jos enää tarvii korotuksen jäjkeen).
+Mitäs sanotte, onko tuo korotus järkevää?
+Kanneksi tulee vakiokansi, josta on jyrsitty tiivistepinta pois. Nyt laitan kannen sorviin, lasken sitä vielä hieman lisää ja sorvaan paljealueen. Puristukset olivat tällä nykyisellä jyrsityllä kannella muistaakseni jotain 7:1.
+Kampiakselia en vaihda, ellei se mene särki. Tällähetkellä löytyy vakio kampiakseli vissiin tunturin kietarilla kun on 12mm tapilla, vai onkohan se kisakampiakseli kun eikös siinä ole kiertokanki 12mm männäntapilla? Vaihdatan ehkä kiertokangen ja alapään neulalaakerin. Petilaakereiksi tulevat skf:n laakerit.
+Kytkimeen laitan kuusi jousta, ja neljä levyä.
+Vitosvaihdetta saa tarjota!
+Pakoputki on jo suunniteltu, ja mallit tulostettu. Eli enää puuttuu vaan itse putki. Putken suunnittelin huipputehoputkeksi, pitäisi ottaa 7000-8000rpm paikkeilla miehekkään piikin. Suunnittelin sen sillain että se vääntää myös hieman ennen piikkiä niin saa helpommin nostettua kierrokset tehopiikille, muutenhan alavääntöä ei juuri ole. En ole vielä päättänyt että millaisen äänenvaimentimen teen.
+Pitäähän moottorin jotenkin erota joukosta. Tuunasin vähän "kytkinposken kantta". Tuosta ytkinkopasta hion tuon evo-tekstin pois.
+Nyt ei enää tule mitään tarinaa mieleen, jatketaan uusien kujeden merkeissä. Teen tätä aina kun kerkeän, päivitän sitten tännekkin.
+Parannusehdotuksia yms. kaivataan, ja toki kommentoidakkin saa.
+Edit: HUOM! Solikan alkuperäiset lohkot ja pytty on tallella, nämä ovat varaosa koneen paskat lohkot joten voin pilata ne ihan huoletta
+Edit 2: Aloitusviestiä muokattu tämänhetkiseen tilanteeseen sopivammaksi.

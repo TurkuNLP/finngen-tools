@@ -1,0 +1,38 @@
+Sivuston navigaatio
+- AJANKOHTAISTA If((subMenuItems) != null){
+- MEDIA & MAINONTA If((subMenuItems) != null){Tunne tekijätVuoden aikkarimainoksetKuukauden aikkarimainosVINK! Tutkimus natiivimainonnastaBlogiHELP! Tutkimus aikakauslehtimainonnastaTRIP! Tutkimus matkailumainonnastaLOOK! Tutkimus kosmetiikkamainonnastaWROOM! Tutkimus automainonnastaCHIC! Tutkimus muotimainonnastaWAU! Tutkimus sisustusmainonnastaJES! Tutkimus hyvinvointimainonnastaNAM! Tutkimus elintarvikemainonnastaMediakortitLiiteopas Tools
+- MEDIAKASVATUS If((subMenuItems) != null){
+- TIETOA & TUTKIMUKSIA If((subMenuItems) != null){Kansallinen mediatutkimusSomeseurantaAikakauslehtimainonnan tietopankkiLasten ja nuorten mediapäiväAikakauslehtihetki-tutkimusAikakauslehtifaktatTutkimus- ja case-julkistuksetTietoa ammatti- ja järjestö- lehdistä
+- JÄSENILLE If((subMenuItems) != null){
+- AIKAKAUSMEDIA If((subMenuItems) != null){
+Valitun osion navigaatio
+Ajankohtaista
+- Aikakauslehdet mediakasvattajina
+- Aikakauslehtiviikko
+- Oppimateriaalit
+- Varhaiskasvatus
+- Artikkelipankki
+- Uutiskirjeet
+- Koulujen lehtitilaukset
+Aikakauslehtiviikon tehtävät
+Mikä kiinnostaa –jumpassa mietitään mistä lukuinto syntyy ja rauhoitutaan lukemaan yksi juttu
+Mitä olette lukeneet viimeksi ja milloin? Entä mitä lukisit kaikkein mieluiten, miltä lukeminen tuntuu tai voiko lukemista harjoitella? Millaisissa tilanteissa hyvä lukutaito auttaa? Lukeminen on mielekkäämpää, jos luettu teksti on itseä kiinnostava, eikö niin? Tehkää ensin pieni alkulämmittely.
+» Katso ja tulosta koko tehtävä
+Faktamutupiirissä kerrataan luettua yhdessä ja pohditaan faktoja mediassa
+Kun jutut on luettu, kokoontukaa yhdessä piiriin. Faktamutu-piirissä jokainen pääsee kertomaan muille, mitä uutta juttua lukiessasi oppi ja miltä lukeminen tuntui. Tehtävää voi syventää Kahoot!-kyselyllä. Aikakauslehtiviikon Kahootit löydät sovelluksesta hakusanalla Aikakausmedia.
+» Katso ja tulosta koko tehtävä
+Juttubingossa tutustutaan juttutyyppeihin ja aikakauslehtien sisältöön
+Sisällysluettelo kertoo, mitä juttuja lehdessä on, mutta löydätkö lehdestä apinalaatikon?
+» Katso ja tulosta koko tehtävä
+Sokkohaastattelussa herätellään mielikuvitusta ja harjoitellaan haastattelemisen perusteita
+Millainen on hyvä kysymys? Kokeilkaapa: onko sinulla ollut kiva päivä tänään? Kuinka moni vastasi vain “joo” tai “ei”? Joosta ja eistä ei vielä keksi paljoa kirjoitettavaa. Kerro nyt, mitä olet tehnyt tänään! Siitä voikin jo kirjoittaa jutun.
+» Katso ja tulosta koko tehtävä
+Rohkeasti omanlainen -tehtävässä otetaan kuvia ja katsellaan itseä toisen silmin
+Lehdessä ihminen esiintyy harvoin arkisena. Juttuja varten haastateltavat usein stailataan, meikataan ja valaistaan. Kuvia myös käsitellään ennen julkaisua. Lehteen tehdään juttuja ihmisistä, jotka ovat tehneet jotakin merkittävää työ- tai yksityiselämässään tai joiden elämäntapa, valinnat tai harrastukset ovat kiinnostavia tai ajankohtaisia yhteiskunnallisesti. Henkilöjuttu avaa lukijalle ikkunan toisen ihmisen elämään.
+» Katso ja tulosta koko tehtävä
+Haastattelusta jutuksi -tehtävässä pohditaan samoja asioita kuin toimituksessakin ennen jutun julkaisua
+Jatkakaa Sokkohaastattelu-tehtävää ja kokeilkaa henkilöjutun tekemistä haastattelun pohjalta. Valitse ensin ryhmällesi sopiva tavoite: mielikuvitus, näkökulma tai klikkiotsikko.
+» Katso ja tulosta koko tehtävä
+Otsikkorunous-tehtävässä tutustutaan lehtien sisältöihin ja luodaan ready made -tekstiä
+Valitse lehti, jota et ole koskaan lukenut. Selaile se läpi, silmäile otsikot mainoksista pieniin silppujuttuihin. Mikä otsikko pysäytti? Kirjoita se muistiin. Kokoa lehden otsikoista lyriikkaa, runo, aforismi tai pieni haiku. Kirjoita se kirjepaperille tai tyhjään korttiin ja jätä jonkun muun luettavaksi.
+» Katso ja tulosta koko tehtävä

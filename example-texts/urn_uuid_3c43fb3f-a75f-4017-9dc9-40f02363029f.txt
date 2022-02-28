@@ -1,0 +1,19 @@
+LiteBreeze on intialainen web-sovelluskehitysyritys, jolla on ruotsalainen johto. Olemme toimineet vuodesta 2004, ja tällä hetkellä meillä on yli 50 työntekijää. Suurin osa on PHP-kehittäjiä.
+Vahvuutemme on melko monimutkaiset verkkopohjaiset järjestelmät – Esimerkiksi mukautetut yritysohjelmistot, portaalit, CRM-sovellukset, tilausten hallinta jne.
+Suurin osa ohjelmoijistamme käyttää nykyään Laravel-kehystä. Tiimillämme on kokemusta useimmista PHP-liittyvistä tekniikoista, kuten esimerkiksi CodeIgniter, Zend Framework sekä Symfony. Jotkut kehittäjistämme työskentelevät Angular:n ja Ioniciin perustuvien mobiilisovellusten kanssa.
+Ruotsalainen johtajamme David Claesson perusti LiteBreeze Intian vuonna 2004, ja hän on työskennellyt Intiassa 15 vuotta.
+Palkkaamme paitsi kehittäjiä, joilla on vaikuttavat taidot ja asenne, myös hyvät kommunikaatiotaidot.
+Kehittäjiemme kanssa on helppo työskennellä. Pyrimme vastaamaan kysymyksiisi ennen kuin olet edes kysynyt niitä.
+Ohjelmoijan korkea suorituskyky varmistetaan säännöllisillä valmennusistunnoilla ja palkkaarvioinneilla.
+Ymmärrämme, että aikasi on arvokasta. Palkkaa PHP-kehittäjä, jonka avulla voit keskittyä yritykseesi.
+Kehittäjämme keskittyvät loppukäyttäjien näkökulmaan. Käyttäjäystävällinen ohjelmisto: liiketoiminnan menestys.
+anhemmat projektipäälliköt ja arkkitehdit tekevät usein koodin tarkistuksia skaalautuvuuden, turvallisuuden ja nopeuden varmistamiseksi.
+Nämä ovat kaksi asiakastamme. Voit selata lisää web-sovellusprojektejamme täältä
+ActaPublica.se on Ruotsin suurin verkkoarkisto, jota on kerätty vuosikymmenien ajan. Käyttäjä voi etsiä ja ladata miljoonia laadukkaita julkisia asiakirjoja erilaisten suodatusvaihtoehtojen avulla, mukaan lukien erityisiä avainsanoja. Lue Lisää
+Funcruises.se on ruotsalainen tapahtumasuunnittelija ja matkatoimisto. He ovat erikoistuneet risteilyjen järjestämiseen opiskelijoille ja niche-kohderyhmille. Olemme kehittäneet heidän CRM:ää, varausten hallintajärjestelmää ja verkkosivustoa vuodesta 2009. Sovellusten rakentaminen kesti yli 6000 tuntia. Ne uudistettiin vuonna 2016 uusinta tekniikkaa käyttämällä. Lue Lisää
+Asiantuntijamme voivat kehittää useimpia verkkosovelluksia ja järjestelmiä, mukaan lukien tilauksenhallintajärjestelmät, varausjärjestelmät, CRM-ohjelmistot, verkkoportaalit, verkkokauppasivustot, LMS/e-oppimisratkaisut, rekrytointiympäristöt sekä kirjanpito-ohjelmistointegraatiot.
+Meillä on eniten kokemusta ratkaisuista, joita ovat räätälöidyt web-sovellukset, joiden kehittäminen on vaatinut vähintään 300 henkilötyötuntia. Ohjelmistokehittäjämme ovat hoitaneet hankkeita, jotka ovat jopa noin 25 000 henkilötyötuntia kahden vuoden kehitystyön aikana.
+LiteBreeze on käyttänyt PHP- ja MySQL-ratkaisuja vuoden 2004 alusta lähtien. Nykyään suosittelemme PHP-pohjaisen Laravel-kehyksen käyttämistä useimmissa sovellustyypeissä.
+Toimimme myös seuraavien ohjelmistokehys frameworkien kanssa: CodeIgniter, Zend, Symfony ja CakePHP. Selaa kehittäjäprofiileitamme ja palkkaa oikea kehysasiantuntija projektiisi.
+Kun kyse on tietokannoista, käytämme MySQL:tä 90% tapauksista. Arvioimme vaihtoehtoja, kuten MariaDB, MongoDB ja Redis sovellusarkkitehtuurista riippuen.
+Sitoumuksemme on tarjota korkealaatuinen ulkoistettu web-kehitys ja mahdollisimman sujuva kokemus asiakkaillemme – ulkoistaminen on helppoa!

@@ -1,0 +1,51 @@
+Väliseinä
+Kevyt väliseinä jakaa tilaa perheen muuttuvien tarpeiden mukaan. Erota huoneesta oma työpiste, luku- tai leikkinurkka tai ruokailutila. Väliseinä voi olla tarvittaessa eristetty, esim. kylmätilan ja huonetilan välinen seinä. Väliseinä voi olla myös osastoiva seinä eli joko ääntä tai paloa eristävä.
+Väliseinän rakennusohje
+Suunnittelu
+Tämä ohje soveltuu ei-kantaviin väliseiniin. Rakennettavasta väliseinästä kannattaa ensimmäiseksi tehdä mittatarkka suunnitelma. Merkitse piirrokseen seinään tulevat ovet ja aukot, niiden koot ja sijainnit sekä seinän mitat. Piirtämällä kuvaan runkorakenteet ja pintaverhoukset voit laskea, kuinka paljon niitä seinään tarvitaan. Myös mahdolliset sähköasennukset pitää suunnitella etukäteen.
+Tarvitset seuraavat työkalut: vasara, pistosaha, teräsviivain, veitsi, ruuvimeisseli, nivelmitta, mahdollisesti johdoton porakone sekä höylä, rasiapora ja pitkä vesivaaka. Lisäksi tarvitset nauloja, ruuveja ja mahdollisesti tulppia koolausrakenteen kiinnittämistä varten.
+Kaikki mitat on annettu millimetreinä ellei toisin ilmoiteta.
+Tukirakenne (koolaus)
+Aloita rakentamalla seinän runko. Runko koostuu koolauspuista, joiden mitat ovat 39 x 66 (kertopuu) tai vaihtoehtoisesti 42 x 66 (liimapuu).
+Asenna aluksi lattialle tukipuu (aluspuu). Tarkista, että aluspuu on kohtisuorassa seinään nähden ottamalla mittanauhalla ristimitat aluspuusta viereiseen seinään. Molempien ristimittojen pitää olla samat. Jos haluat erityisen hyvin äänieristetyn seinän, asenna eristenauhaa lattian ja aluspuun väliin. Jos alusta on puuta, kiinnitä 100 x 3,4 nauloilla. Älä naulaa puun päätypintoihin. Jos alusta on betonia tai muuta vastaavaa materiaalia, kiinnitä tukipuut alustaan poraamalla ja käyttämällä tulppia ja ruuveja. Käytä aluspuun reikiä mallina, kun poraat reikiä lattiaan. Aluspuun ja betonilattian väliin asetetaan eristeeksi pohjapahvia tai jotakin vastaavaa materiaalia. HUOM: Jos lattiassa on lattialämmitys, kiinnitä aluspuu liimaamalla.
+Seuraavaksi asennetaan tukipuu (yhdysparru) kattoon samansuuntaisesti aluspuun kanssa. Tarkista vesivaa’an avulla, että yhdysparru on suorassa aluspuuhun verrattuna. Mittaa sitten lopuille koolauspuille keskeltä keskelle etäisyys, joka on 400 tai 600 riippuen siitä, kuinka tukevan alusta seinän levytys ja pinnoitus vaatii.
+Jotta saisit 1200 mm leveistä kipsilevyistä tehtyyn ja saumattavilla laatoilla, esimerkiksi kaakeleilla, pinnoitettavaan seinään riittävästi jäykkyyttä, saa koolausten etäisyys olla enintään:
+- k 400 yksinkertaisen kipsilevyn kanssa
+- k 600 kaksinkertaisen kipsilevyn kanssa (limitetyt liitoskohdat).
+Pystykoolaukset vinonaulataan lattia- ja kattopuihin. Käytä vinonauloja 100 x 3,4.
+Oviaukon molemmin puolin asennetaan koolaukset. Oviaukon pysty- ja vaakamittojen on oltava noin 10 – 20 mm ovenkarmin ulkomittoja suuremmat. Oviaukon yläpuolelle asennetaan vaakapuu. Oven yläpuolelle tulevaan levyverhoukseen ei saa tehdä jatkoksia oviaukon sivukoolausten kohdalle, sillä silloin voi syntyä halkeamia. Siksi oviaukon yläpuolisen vaakapuun ja kattopuun väliin täytyy asentaa pystysuora koolaus.
+Vaakapuut asennetaan pohjaksi raskaampien kuormitusten seinäkiinnityksille, kuten seinään kiinnitettäviä kirjahyllyjä tai kaappeja varten. Vaihtoehtoisesti voit korvata vaakapuut käyttämällä kaksinkertaisia seinälevyjä, joista alempi on 12 mm puulevy esimerkiksi vaneria tai lastulevyä. Näin saat tukevamman seinän, joka kestää asennuksesta riippuen hieman raskaampaa kuormitusta. Myös äänieristys paranee.
+Sähköasennukset
+Muista, että ennen seinän verhoilua pitää kaikkien seinän sähköasennusten olla tehtynä. Sähkörasiat asennetaan aina vaakapuihin tai ylimääräisiin pystysuoriin koolauksiin. Sähköjohtojen putkille porataan reiät koolauspuiden keskelle, jotta niiden kestävyys ei heikkene. Sähköasennukset saa tehdä vain pätevä sähköasentaja.
+Levytys
+Koolausrunko päällystetään halutulla levymateriaalilla. Tavallisinta on 13 mm kipsilevy, jota käytetään yksi tai kaksi kerrosta kummallekin puolelle. Kaksinkertaisen levyn käyttö on suositeltavaa, koska silloin saadaan tukevampi seinä, joka kestää paremmin kevyehköjä kiinnityksiä. Jos kerroksia on kaksi, levyjen liitokset tulevat koolausten päälle. Paremman äänieristyksen saamiseksi voi koolausten väliin asettaa mineraalivillalevyn.
+Kipsilevyjen tavallisin leveys on 1200. Vakiopituuksia on useita, joista kannattaa valita sopivin. Käyttämällä huonetilan korkuisia levyjä voit välttää liitokset ja siten mahdolliset halkeamat. Jos levyjä on pakko jatkaa pystysuunnassa, on liitoskohdan takana oltava aina koolaus.
+Vaneria valmistetaan kuusesta, männystä ja koivusta. Seinävanerin koko on 1200 x 2750 ja nimellispaksuus 9 mm. Levy on ponttaamaton ja tarkoitettu rakennusten sisäpuolisten seinien lujuutta ja jäykkyyttä lisääväksi aluslevyksi ns. kaksoislevytettävissä seinissä, joissa sisäverhouksena vanerin päällä käytetään muuta sisäverhousmateriaalia. Pinnoitetut ja viimeistellyt sisustusvanerit voidaan jättää näkyviin sellaisinaan.
+Lastulevy soveltuu hyvin maalattavien seinä- ja kattopintojen sisäverhoukseen. Seinä- ja kattoverhouksiin käytetään tavallisimmin 10, 11 tai 12 mm paksuja vakiolastulevyjä tai pitkiltä sivuilta pontattuja lastulevyjä. Pontatuissa levyissä on tavallisesti reunaviiste, jonka ansiosta ponttisaumaan muodostuu pienehkö v-ura. Kyseisiä levyjä on saatavana myös pohjamaalattuna tai maalauspohjapaperilla pinnoitettuna.
+Kipsilevyjen katkaiseminen
+Aseta levy pöydälle tai pukkien päälle. Leikkaa terävällä veitsellä ylemmän pahvin läpi ja niin syvälle, että myös kipsiin tulee viilto. Käytä tukena viivainta tai suoraa lautaa. Taita sitten levy viiltämääsi viivaa pitkin jotakin suoraa reunaa vasten. Leikkaa alempi pahvi irti. Tasoita reunat keskikarkealla hiekkapaperilla tai surform-höylällä.
+Asennus
+Tavallisessa pitkittäisasennuksessa (pystysuora kipsilevy) levyn pitkät sivut asetetaan aina pystysuorien koolausten päälle. Jos kipsilevyyn tehdään jatkos, on liitoskohdan alla oltava koolauspuu.
+Leikattu suora reuna asetetaan ja sovitetaan kattoa ja seinää vasten. Levyt leikataan 10 – 15 mm huoneen korkeutta lyhyemmiksi. Aseta kipsilevy aluspuuta vasten ja työnnä levy sitten pystyyn kattoa kohden puuriman avulla. Paina levy tukirakenteita vasten, jotta se asettuu kunnolla paikoilleen. Levyssä ei saa olla liitoksia samalla kohdalla ovi- ja ikkuna-aukkojen reunojen kanssa. Sen sijaan levy on sovitettava niin, että liitos tulee aina aukon yläpuolelle.
+Mahdollisten sähkörasioiden asennusreiät tehdään kipsilevyyn pistosahalla tai rasiaporalla.
+Naulaaminen ja ruuvaaminen
+Kipsilevyt kiinnitetään puurakenteisiin sähkösinkityillä kierteisillä kipsinauloilla, joita on saatavana mitoissa 35 x 2,4 yhtä levykerrosta ja 50 x 2,4 kahta levykerrosta varten.
+Kipsilevyt voi myös kiinnittää puurakenteisiin kipsiruuveilla, joiden pituus on 30 yhtä levykerrosta ja 41 kahta levykerrosta varten.
+Naulojen ja ruuvien etäisyys reunasta:
+- leikatusta reunasta: 15
+- kartonkireunasta: 10.
+Ruuvausetäisyys:
+- levyn keskellä: k300
+- levyn reunoilla: k200.
+Naulausetäisyys:
+- levyn keskellä: k200
+- levyn reunoilla: k150.
+Lastulevyt kiinnitetään puurakenteiisiin lastulevyruuveilla. Ruuvin pituuden on oltava vähintään kaksi kertaa levyn paksuutta suurempi. Lastulevyyn, jonka paksuus on 12 mm, käytetään pituutta 28. On tärkeää, että lastulevyruuvit ovat niin kutsuttuja itseporautuvia ruuveja (kierteinen varsi), jossa on urat kannan alla.
+Lastulevyt naulataan puurakenteisiin kuumasinkityillä ja rihlatuilla dyckert-nauloilla. Naulojen pituuden on oltava kolme kertaa levyn paksuus. Lastulevyyn, jonka paksuus on 12, käytetään kuumasinkittyjä ja rihlattuja dyckert-nauloja, joiden mitta on 35 x 1,7.
+Ruuvit tai naulat upotetaan noin 1 mm verran lastulevyn sisään. Lastulevy ruuvataan tai naulataan puurakenteisiin yhdellä naula- tai ruuvirivillä, jossa kiinnitysetäisyys on 100 – 150 levyn reunoilla ja 150 – 200 levyn keskellä.
+Lastulevyn ympärille niin lattiaa, kattoa, nurkkia kuin muitakin rajoja vasten on jätettävä levylle tilaa elää, jolloin ei pääse syntymään vaurioita. Liikkumissauman on oltava 1 mm seinämetriä kohden, mutta kuitenkin vähintään 4 mm.
+Vanhan väliseinän purkaminen
+Ennen seinän purkutyön aloittamista on tärkeää tarkistaa, ettei kyseessä ole kantava seinä. Pienemmissä puutaloissa asian selvittäminen voi olla hankalaa – jos olet epävarma, pyydä apuun rakennusinsinööri tai rakennusurakoitsija. Kantavia seiniä ei voi purkaa tai muokata ilman rakennesuunnittelijan ja rakennusvalvonnan lupaa. Kiinnitä huomiota myös mahdollisiin sähköasennuksiin tai vesijohtoihin, joita voi olla rakennettuna seinän sisään. Tällaisissa tapauksissa on pyydettävä pätevää ammattilaista selvittämään, miten purkutyö pitää tehdä. Ennen rungon purkamista on seinästä ensin irrotettava kaikki pintamateriaalit, jotta saadaan mahdolliset asennukset näkyviin.
+Pinnoitus
+Miten huoneesta saadaan viihtyisämpi? Puupaneeli voi tehdä huoneesta mukavamman. Huoneen olemus muotoutuu sen perusteella, mikä paneeli valitaan ja asennetaanko se pysty- vai vaakasuoraan. Viimeistelynä asennetaan katto- ja lattialistat.
+Puupaneeleiden asennusta koskevia vinkkejä löydät ohjeesta Panelointi ja listat.
