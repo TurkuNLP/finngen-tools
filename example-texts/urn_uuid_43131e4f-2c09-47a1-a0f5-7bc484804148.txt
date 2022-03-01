@@ -1,0 +1,48 @@
+Sivuston navigaatio
+- AJANKOHTAISTA If((subMenuItems) != null){
+- MEDIA & MAINONTA If((subMenuItems) != null){Tunne tekijätVuoden aikkarimainoksetKuukauden aikkarimainosVINK! Tutkimus natiivimainonnastaBlogiHELP! Tutkimus aikakauslehtimainonnastaTRIP! Tutkimus matkailumainonnastaLOOK! Tutkimus kosmetiikkamainonnastaWROOM! Tutkimus automainonnastaCHIC! Tutkimus muotimainonnastaWAU! Tutkimus sisustusmainonnastaJES! Tutkimus hyvinvointimainonnastaNAM! Tutkimus elintarvikemainonnastaMediakortitLiiteopas Tools
+- MEDIAKASVATUS If((subMenuItems) != null){
+- TIETOA & TUTKIMUKSIA If((subMenuItems) != null){Kansallinen mediatutkimusSomeseurantaAikakauslehtimainonnan tietopankkiLasten ja nuorten mediapäiväAikakauslehtihetki-tutkimusAikakauslehtifaktatTutkimus- ja case-julkistuksetTietoa ammatti- ja järjestö- lehdistä
+- JÄSENILLE If((subMenuItems) != null){
+- AIKAKAUSMEDIA If((subMenuItems) != null){
+Valitun osion navigaatio
+Ajankohtaista
+- Tunne tekijätKari-Otso Nevaluoma, Kaikkien aikojen jouluMinna Hyytiäinen, TaitoJukka Ruukki, TiedeSanna Autio, YhteishyväEva Agge, SairaanhoitajaAnni Valtonen, Maailman KuvalehtiMinna Siltala, KotipuutarhaElisa Miinin, Apu JunioriPertti Saloheimo, LääkärilehtiJukka Heinonen, SeuraElina Lappalainen, TalouselämäLauri Paloposki, RiffiVaula Norrena, Valores ConsultEero Kettunen, KolmiokirjaTuukka Grönholm, PelitRiikka Kaartinen, Suomen LuontoAnni Lintula, A-lehdetJenni Fabritius ja Suvi Takala, HeppuVelimatti Honkanen, Tekniikan MaailmaMinna McGill, Kodin Kuvalehti
+- Vuoden aikkarimainokset
+- Kuukauden aikkarimainos
+- VINK! Tutkimus natiivimainonnasta
+- Blogi
+- HELP! Tutkimus aikakauslehtimainonnasta
+- TRIP! Tutkimus matkailumainonnasta
+- LOOK! Tutkimus kosmetiikkamainonnasta
+- WROOM! Tutkimus automainonnasta
+- CHIC! Tutkimus muotimainonnasta
+- WAU! Tutkimus sisustusmainonnasta
+- JES! Tutkimus hyvinvointimainonnasta
+- NAM! Tutkimus elintarvikemainonnasta
+- Mediakortit
+- Liiteopas Tools
+Yhteishyvän ruokasisällöt testataan useasti ja mietitään tarkkaan: ”Suosituimmat reseptit ovat todella tavallisia”
+Yhteishyvän ruokaliite on tuttu lehti yli miljoonalle suomalaisille. Reseptien terveellisyys ja helppous on kaikki kaikessa. Joskus reseptiä on hinkattu jopa kuusi kertaa, jotta siitä on saatu toimiva.
+Helppoa, hyvää ja terveellistä – sitä on arkiruoka parhaimmillaan. Arjen kiireiden keskellä moni lapsiperhe nappaa vinkkejä resepti- ja ruokalehtien sivuilta. Reseptejä, ruokavinkkejä ja herkullisia kausisuosituksia näkee myös lähikaupassa – mainosnäytöillä ja kauppojen sometileillä. S-ryhmän kaupoissa reseptit tulevat yhdestä paikasta.
+Yhteishyvä Sesonki on S-ryhmän Yhteishyvä-lehden välissä ilmestyvä ruokalehti, joka ilmestyy kuusi kertaa vuodessa. Lehti tavoittaa jopa 1,8 miljoonaa suomalaista. Tämän lisäksi ruokalehteä voi bongata läheisen S-marketin hyllyillä.
+Vaikka Yhteishyvä Ruoka tavoittaa paljon jo pelkästään printtilehtenä, Yhteishyvän digisisällöt tavoittavat noin puolitoista miljoonaa kuukausittain. Facebookissa seuraajia on noin 90 tuhatta ja Instagramissa yli 40 tuhatta. Monikanavaisen lehden pääkohderyhmä ovat lapsiperheet.
+– Olemme läsnä arjen auttamisessa. Pyrimme siihen, että lehden reseptit ovat helppoja, terveellisiä ja monipuolisia. Pidämme mielessä myös, että monet ajattelevat myös ruuan hintaa, kuvailee Yhteishyvän ruokasisältöjen sisältöpäällikkö Sanna Autio.
+Aution mukaan yhteishyvä.fissä ollaan kokeilevampia ja tehdään reseptejä eri kohderyhmille, kuten ruokahifistelijöille ja ekologisuudesta kiinnostuneille. Sekin tiedetään, että leivontasisällöt toimivat parhaiten Instagramissa. Ruokasisältöjä tehdään myös uutuuksien ympärille, sesonkikaloille, Food Market Herkulle, satokausituotteiden rinnalle… Lista on pitkä, mutta myös jakelukanavat ovat laajat. S-ryhmän kaupoilla on oikeus käyttää reseptejä ja kuvia omissa kanavissaan, myymälöissä ja omissa viestimissään haluamallaan tavalla.
+Reseptit laaditaan tarkasti
+Terveellisyydestä, erityisesti suolan ja sokerin määrästä, pidetään kiinni tiukasti, mausta tinkimättä. Joskus kokeilukeittiössä reseptiä on hinkattu kuusi kertaa, jotta se täyttää vaatimukset.
+Sanna Autio kertoo videolla tarkemmin Yhteishyvän reseptien teosta.
+Ruokasisältöjen taustalla häärää ammattilaistiimi. Se koostuu toimittajista, tuottajista, sisältöpäälliköstä, palvelupäälliköstä ja reseptin tekijöistä, jotka ovat kotitalousopettajataustaisia tuoteasiantuntijoita. Kaikki reseptit tehdään ja testataan SOK:n kokeilukeittiössä. Sanoma hoitaa ruokaliitteiden koostamisen printiksi ja tekee kaikki ruokavalokuvaukset. Näiden lisäksi kuvataan ruokavideoita noin 12 per kuukausi.
+Sanna Autio on taustaltaan kokki ja kotitalousopettaja. Autio oli perustamassa Glorian ruoka & viini -lehteä, teki pitkään töitä ruokatoimittajana ja työskenteli vielä Valion markkinoinnissa ennen, kun päätyi SOK Mediaan. Viimeiset 21 vuotta Autio on luotsannut Yhteishyvä Ruokaa.
+– Työn suola on siinä, että tässä oppii koko ajan uutta ja saa olla mukana kehittämässä uusia asioita.
+Kiire on työssä läsnä, sillä ruokasesonki on jatkuvasti päällä. Erityisesti keväällä töitä urakoidaan olan takaa, jotta jokainen voi pitää lomansa kesällä.
+Analytiikasta apuja
+Osa tiedosta saadaan käytännön työssä. Seurataan ilmiöitä, trendejä kotimaasta ja ulkomailta. Aution mukaan isommat ruokatrendit kestävät usein pari vuotta ja sitten kuihtuvat. Kaikkiin ilmiöihin tai trendeihin ei lähdetä mukaan, sillä reseptien teossa noudatetaan tiettyjä periaatteita. Joskus somen mikroilmiö voi olla vaikkapa epäterveellinen ja se jätetään välistä. Autio uskoo, että tulevat trendit ruuassa on terveellisyys ja hyvinvointi sekä kasvisruoka, ja siihen lehti satsaa jatkuvasti.
+Reseptimme ovat sesongin mukaisia ja niissä suositaan kotimaisia tuotteita. Meille on tärkeää, että reseptit ovat edullisia ja että ainesosalista pysyy lyhyenä.
+Yhteishyvän ruokasisältöjen tekemisessä käytetään hyväksi myös analytiikkaa. Google Analyticsin ja oman sivuston kävijöiden seurannan avulla näkee, mitä reseptejä ja ruokia ihmiset etsivät eri aikoina. Syksyllä moni googlettaa omenareseptejä tai esimerkiksi omena+leivonnainen -sanoilla ruokavinkkejä. Varsinaista asiakkaiden ostodataa ei käytetä hyväksi, mutta SOK:n vähittäiskaupan ketjuohjauksesta ja markkinoinnista lehden toimitus saa arvokasta tietoa siitä, mitä asiakkaat ostavat ja syövät.
+– Toki tiedämme, että varsinkin lapsiperheissä ostetaan paljon jauhelihaa. Siksi teemme siitä reseptejä. Varmistamme myös, että reseptien raaka-aineita on saatavilla Prismoista ja S-marketeista.
+Monikanavainen toimitus seuraa luonnollisesti myös omien sisältöjensä analytiikkaa. Aution mukaan suosituimmat Yhteishyvä.fin reseptit ovat tavallisia: lihapullat, kaalilaatikko ja kinkku-uunimunakas keikkuvat suosituimpien kärjessä.
+– Olemme mukana erilaisissa ruokasesongeissa, mutta emme hötkyile, sillä tiedämme, että ihmiset pitävät lihapullista.
+Koronakevään aikana jaettiin enemmän edullisia arkiruokareseptejä. Sisältöpäällikön mukaan artikkelit, jotka kertoivat nopeasta ruuanteosta ja nopeista kauppareissuista, olivat suosittuja. Ihmiset kaipasivat helppoa arkiruokaa, mutta toisaalta leipomisreseptien suosio kasvoi.
+Sanna Autio on Yhteishyvän ruokasisältöjen sisältöpäällikkö. Kotitalousopettajan ja kokin koulutuksen saanut Autio teki pitkään töitä ruokatoimittajana aikakauslehdissä, kunnes siirtyi Valion markkinointiin. SOK Mediassa Autio on työskennellyt jo 21 vuotta.
+Teksti: Leena Seppinen | kuvat: Timo Pyykkö

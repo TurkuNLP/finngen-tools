@@ -1,0 +1,75 @@
+TOPWAY- Lattialämmityslaskuri
+Betonivalulle kolmeen kerrokseen
+Betonivalulle kolmeen kerrokseen
+Muista ostaa mukaan syöttöputken liitinrungot ja syöttöputken putkiliittimet.
+Toimitamme syöttöputken 10m välein.
+Jos kokonaistarve eli meno+paluu on 40m, voit tilata syöttöputkea 2x20m.
+Yhdellä pullolla liimaa n.50 levyä.
+Liiman määrä on laskettu (levymäärä : 50)
+HUOM! Hankithan tarvittaessa liiman lisäksi myös yhden liimapistoolin, jonka avulla voit liimaa käyttää.
+Levyjen määrä on laskettu käyttämällä kaavaa (lämmitettävät neliöt : 0,72).
+Tämä laskukaava ei ota huomioon työvaroja.
+Suosittelemme lisäämään kohteesta riippuen työvaroja 5%-10%.
+Jos jakotukkisi tulee sijaitsemaan teknisessä tilassa tai lähellä lämmöntuottolaitetta, voit valita suorasulkuparin.
+Muussa tapauksessa valitse kulmasulkupari.
+Jos et ole varma, valitse kulmasulkupari.
+Jos piirejä tulee vain yksi, täytyy sinun hankkia kaksiosainen jakotukki
+ja siihen lisäksi tulpat (2kpl), joilla voit tulpata ylimääräisen piirin.
+Käsisäätöpiirit tulevat kosteisiin tiloihin sekä tiloihin,
+joissa halutaan pitää mukavuuslämpöä yllä. Jakotukin mukana
+tulevilla piirihatuilla voi käsisäätöpiirejä säätää.
+Suosittelemme kuitenkin hankkimaan helpommin säädettävät käsisäätöpyörät verkkokaupastamme.
+Näihin saat liimattua myös piirin tunnistetarran, joka helpottaa huoltotoimissa.
+Termostaatit tulevat huoneisiin, joihin halutaan huonekohtainen lämpötilan säätö.
+Valikoimistamme löytyy kolme eri termostaattimallia.
+HUOM! Termostaattimme ovat 230V, joten ethän asenna niitä kosteisiin tiloihin,
+vaan käytät näissä tiloissa käsisäätöpiirejä.
+Vaihtoehtona verkkokaupassamme on myös langaton järjestelmä.
+Virtausmittarien lukitsimet asennetaan virtausmittareihin sen jälkeen,
+kun järjestelmä on ilmattu ja säädetty. Näin asetukset eivät pääse vahingossa muuttumaan.
+Lukitsimissa on myös paikka piirin tunnistetarralle, johon voit
+kirjoittaa minkä huoneen piiri on kyseessä. Tämä helpottaa mm. huoltotöitä.
+Taivutuskaari on hyvä laittaa jokaiseen putkeen (tulo- sekä menopuolelle).
+Näin saat tehtyä siistit kaaret putkiin jakotukin alle.
+Muista valita oikeat liittimet putkihalkaisijan ja putkimateriaalin mukaan.
+(PE-RT -muoviputki tai Alpert -komposiittiputki)
+HUOM! Jos haluat käyttää Alpert -putkea, muista lisätä ostoskoriin putken viiste- ja kalibrointityökalu.
+Putken määrä on laskettu laskukaavalla, jossa yhden piirin pituus on 65m
+ja käytetään ⌀16mm lattialämmitysputkea.
+Toimitamme Alpert tai PE-RT lattialämmitysputket 100m, 200m ja 500m keloissa.
+Laskuri käyttää hintatietonaan PE-RT -putkea.
+HUOM! Jos haluat käyttää Alpert -putkea, muista lisätä ostoskoriin putken viiste- ja kalibrointityökalu.
+Jos jakotukkisi sijaitsee lähellä lämmöntuottolaitetta, ja tämä väli asennetaan “kovalla” putkella (komposiitti tai kupariputki),
+sinun ei tarvitse hankkia liitinrunkoja ja syöttöputken putkiliittimiä.
+Nämä 26mm liittimet sekä liitinrungot tarvitset silloin, kun käytät 26mm Topway syöttöputkea.
+Jos syöttöputkesi on hankittu muualta, ja se on 25mm, löydät sopivat liittimet ja liitinrungot verkkokaupastamme.
+Syötä tähän lämmitettävien huoneiden pinta-ala yhteensä.
+Käytä kokonaisia neliöitä tai , tilalla . :ttä. esim. 15.5 ei 15,5
+(Betonivalu: 14m2 – 156m2)
+(AluXPS-uralevy: 53m2 – 156m2)
+Jos kohteen kerroksissa on käytetty montaa eri lattiarakenneratkaisua kannattaa,
+jokainen kerros laskea omanaan. (esim. kellari, 1.kerros ja 2. kerros)
+Syötä tähän lämmitettävien huoneiden pinta-ala yhteensä.
+Käytä kokonaisia neliöitä tai , tilalla . :ttä. esim. 15.5 ei 15,5
+Monikerroksisissa kohteissa kerroksen maksimi neliömäärä on 156m2/kerros.
+Syötä tähän niiden termostaatilla ohjattavien huoneiden määrä,
+jotka ovat 15-30m2. Huom! Älä syötä tähän Kosteita tiloja,
+wc-tiloja, käytäviä tms., joihin ei tule termostaatti ohjausta.
+Syötä tähän niiden termostaatilla ohjattavien huoneiden määrä,
+jotka ovat yli 31m2. Huom! Älä syötä tähän Kosteita tiloja,
+wc-tiloja, käytäviä tms., joihin ei tule termostaatti ohjausta.
+Syötä tähän niiden termostaatilla ohjattavien huoneiden määrä,
+jotka ovat alle 15m2. Huom! Älä syötä tähän Kosteita tiloja,
+wc-tiloja, käytäviä tms., joihin ei tule termostaatti ohjausta.
+Syötä metrit kokonaisissa metreissä pyöristäen ylöspäin 5, 10, 15, 20… eli esim.12m = 15m.
+Laskuri lisää automaattisesti 4m nousu/työvaroja.
+Toimilaitteet tulee hankkia jokaiseen piiriin jota ohjataan termostaatilla.
+Termostaattimme ovat 230V ja NO-toimisia (NormalOpen)
+eli jänniitteettömänä toimilaite pitää piirin auki ja mahdollistaa lattialämmitysveden kierron.
+Levyt kiinnitetään puulattiaan aluslevyn ja ruuvin avulla.
+Aluslevyjen ja ruuvien menekki per levy on noin 5-9kpl.
+Aluslevyjen ja ruuvien määrä on laskuttu kaavalla (levymäärä * 5) Tällä tavoin kiinnitys tulee joka kulmaan ja keskelle.
+Ruuveja löytyy verkkokaupasta 250kpl laatikoissa.
+Aluslevyjä myydään verkkokaupassa yksittäin.
+Näillä sidot lattailämmitysputken kiinni valuverkkoon.
+Nippusiteiden tai sidontalankojen menekki on laskettu 3kpl / putkimetri.
