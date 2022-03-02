@@ -4,6 +4,8 @@
 
 import sys
 import gzip
+import json
+import xml.etree.ElementTree as ET
 
 from argparse import ArgumentParser
 
@@ -13,6 +15,7 @@ TEXT_LINE_START = '# text = '
 
 def argparser():
     ap = ArgumentParser()
+    ap.add_argument('--jsonl', default=False, action='store_true')
     ap.add_argument('conllu', nargs='+')
     return ap
 
@@ -25,26 +28,54 @@ def is_para_start_line(line):
     return line.startswith('# <p>') or line.startswith('# <p ')
 
 
+def is_doc_start_line(line):
+    return line.startswith('# <doc ')
+
+
 def is_doc_end_line(line):
     return line.startswith('# </doc>')
 
 
-def output_document(paragraphs):
+def doc_attributes(line):
+    assert line.startswith('# <doc ')
+    assert line.endswith('>')
+    line = line[2:-1] + ' />'
+    elem = ET.fromstring(line)
+    return elem.attrib
+
+
+def output_document(doc_start, paragraphs, args):
     paragraphs = [' '.join(s) for s in paragraphs if s]
-    print('\n\n'.join(paragraphs))
+    text = '\n\n'.join(paragraphs)
+    if not args.jsonl:
+        print(text)
+    else:
+        attrib = doc_attributes(doc_start)
+        data = {}
+        if 'id' in attrib:
+            data['id'] = attrib.pop('id')
+        else:
+            collection, url = attrib.pop('collection'), attrib.pop('url')
+            data['id'] = f'{collection}:{url}'
+        data['meta'] = attrib
+        data['text'] = text
+        print(json.dumps(data, ensure_ascii=False))
 
 
 def print_parsebank_stream_text(f, args):
-    paragraphs = []
+    doc_start, paragraphs = None, None
     for ln, line in enumerate(f, start=1):
         line = line.rstrip('\n')
-        if is_para_start_line(line):
-            paragraphs.append([])
+        if is_doc_start_line(line):
+            assert doc_start is None
+            doc_start = line
+            paragraphs = []
         elif is_doc_end_line(line):
             if paragraphs:
-                output_document(paragraphs)
-            paragraphs = []
-            paragraphs
+                output_document(doc_start, paragraphs, args)
+            doc_start, paragraphs = None, None
+        elif is_para_start_line(line):
+            paragraphs.append([])
         elif is_text_line(line):
             text = line[len(TEXT_LINE_START):]
             paragraphs[-1].append(text)
