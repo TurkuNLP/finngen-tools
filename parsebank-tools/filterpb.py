@@ -33,6 +33,12 @@ def argparser():
         default=None,
         type=float
     )
+    ap.add_argument(
+        '-v',
+        '--invert',
+        default=False,
+        action='store_true'
+    )
     ap.add_argument('conllu', nargs='+')
     return ap
 
@@ -48,20 +54,30 @@ def rest_of_line_starting_with(lines, start):
     return None
 
 
-def process_document(lines, args):
+def filter_document(lines, args):
     delex_ppl = float(rest_of_line_starting_with(lines, DELEX_PPL_LINE_START))
     lex_ppl = float(rest_of_line_starting_with(lines, LEX_PPL_LINE_START))
     register = rest_of_line_starting_with(lines, REGISTER_LINE_START)
 
     if register in FILTERED_REGISTERS:
-        return None
-    if args.max_ppl is not None and lex_ppl > args.max_ppl:
-        return None
-    if args.max_delex_ppl is not None and delex_ppl > args.max_delex_ppl:
-        return None
+        return True
+    elif args.max_ppl is not None and lex_ppl > args.max_ppl:
+        return True
+    elif args.max_delex_ppl is not None and delex_ppl > args.max_delex_ppl:
+        return True
 
-    for line in lines:
-        print(line)
+
+def process_document(lines, args):
+    skip = filter_document(lines, args)
+
+    if args.invert:
+        skip = not skip
+
+    if skip:
+        return None
+    else:
+        for line in lines:
+            print(line)
 
 
 def filter_parsebank_stream(f, args):
