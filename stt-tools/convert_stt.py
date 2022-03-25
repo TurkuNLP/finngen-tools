@@ -34,6 +34,11 @@ def argparser():
         action='store_true',
         help='no whitespace normalization'
     )
+    ap.add_argument(
+        '--no-headline',
+        action='store_true',
+        help='do not add headlines to text'
+    )
     ap.add_argument('input', metavar='FILE-OR-DIR')
     return ap
 
@@ -43,10 +48,10 @@ def normalize_space(string):
 
 
 def normalize_text(string, args):
-    if not args.no_space_norm:
-        string = normalize_space(string)
     if args.unicode_norm != 'None':
         string = unicodedata.normalize(args.unicode_norm, string)
+    if not args.no_space_norm:
+        string = normalize_space(string)
     return string
 
 
@@ -91,14 +96,6 @@ def get_contentset_text(elem, args):
             text = normalize_text(text, args)
             paragraphs.append(text)
         elif e.tag == 'p':
-            # possible subelements at this level:
-            # 5958 b
-            # 2509 h3
-            # 1473 Person
-            #  553 Company
-            #  462 a
-            #for t in s:
-            #    print(s.tag)
             text = subtree_text(e)
             text = normalize_text(text, args)
             paragraphs.append(text)
@@ -132,6 +129,11 @@ def convert_file(path, args):
             pass    # rare, unused
         else:
             logging.warning(f'unexpected tag {e.tag}')
+
+    if not args.no_headline:
+        if 'headline' in contentmeta:
+            text = contentmeta['headline'] + '\n\n' + text
+            print(contentmeta['headline'], file=sys.stderr)
 
     data = {
         'id': id_,
