@@ -12,12 +12,21 @@ import unicodedata
 import logging
 import xml.etree.ElementTree as ET
 
+import inscriptis    # HTML to readable text
+import bs4    # HTML to text fallback
+
 from collections import defaultdict
 from glob import glob
 from argparse import ArgumentParser
 
 
+# XML tags to process
 HEADING_TAGS = ('h1', 'h2', 'h3')
+PARAGRAPH_TAG = 'p'
+
+
+# Regex for likely HTML content
+LIKELY_HTML_RE = re.compile(r'<[/?]?[a-zA-Z0-9]|&[a-zA-Z0-9#]+;')
 
 
 def argparser():
@@ -39,6 +48,11 @@ def argparser():
         action='store_true',
         help='do not add headlines to text'
     )
+    ap.add_argument(
+        '--no-html-processing',
+        action='store_true',
+        help='do not process HTML content to text'
+    )
     ap.add_argument('input', metavar='FILE-OR-DIR')
     return ap
 
@@ -47,11 +61,31 @@ def normalize_space(string):
     return ' '.join(string.split())
 
 
+def normalize_html_space(string):
+    # Less aggressive space normalization for text generated from HTML.
+    string = string.strip()
+    string = re.sub(r'\n\n\n+', '\n\n', string)
+    string = '\n'.join(l.strip() for l in string.splitlines())
+    return string
+
+
+def normalize_unicode(string, args):
+    return unicodedata.normalize(args.unicode_norm, string)
+
+
 def normalize_text(string, args):
     if args.unicode_norm != 'None':
-        string = unicodedata.normalize(args.unicode_norm, string)
+        string = normalize_unicode(string, args)
     if not args.no_space_norm:
         string = normalize_space(string)
+    return string
+
+
+def normalize_html_text(string, args):
+    if args.unicode_norm != 'None':
+        string = normalize_unicode(string, args)
+    if not args.no_space_norm:
+        string = normalize_html_space(string)
     return string
 
 
@@ -62,6 +96,34 @@ def remove_namespaces(tree):
 
 def subtree_text(elem):
     return ET.tostring(elem, method='text', encoding='unicode')
+
+
+def html_to_text(html):
+    try:
+        return inscriptis.get_text(html).strip()
+    except Exception as e:
+        logging.warning(f'inscriptis error, falling back to bs4: {e}')
+        return bs4.BeautifulSoup(html).get_text().strip()
+
+
+def has_html(content):
+    # rough heuristics for whether HTML processing may be needed
+    if any(s in content for s in ('<!--', '-->')):
+        return True    # comments
+    elif not all(c in content for c in '<>') and not '&' in content:
+        return False    # shortcuts most cases
+    elif LIKELY_HTML_RE.search(content):
+        return True
+    else:
+        return False
+
+
+def get_clean_text(content, args):
+    if args.no_html_processing or not has_html(content):
+        return normalize_text(content, args)
+    else:
+        text = html_to_text(content)
+        return normalize_html_text(text, args)
 
 
 def parse_contentmeta(elem):
@@ -91,13 +153,9 @@ def get_contentset_text(elem, args):
 
     paragraphs = []
     for e in elem:
-        if e.tag in HEADING_TAGS:
-            text = subtree_text(e)
-            text = normalize_text(text, args)
-            paragraphs.append(text)
-        elif e.tag == 'p':
-            text = subtree_text(e)
-            text = normalize_text(text, args)
+        if e.tag in HEADING_TAGS or e.tag == PARAGRAPH_TAG:
+            content = subtree_text(e)
+            text = get_clean_text(content, args)
             paragraphs.append(text)
         else:
             logging.warning(f'unexpected tag {e.tag}')
@@ -133,7 +191,6 @@ def convert_file(path, args):
     if not args.no_headline:
         if 'headline' in contentmeta:
             text = contentmeta['headline'] + '\n\n' + text
-            print(contentmeta['headline'], file=sys.stderr)
 
     data = {
         'id': id_,
