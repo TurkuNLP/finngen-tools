@@ -103,7 +103,7 @@ def html_to_text(html):
         return inscriptis.get_text(html).strip()
     except Exception as e:
         logging.warning(f'inscriptis error, falling back to bs4: {e}')
-        return bs4.BeautifulSoup(html).get_text().strip()
+        return bs4.BeautifulSoup(html, 'lxml').get_text().strip()
 
 
 def has_html(content):
