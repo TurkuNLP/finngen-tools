@@ -104,7 +104,7 @@ def html_to_text(html):
     try:
         return inscriptis.get_text(html).strip()
     except Exception as e:
-        logging.warning(f'inscriptis error, falling back to bs4: {e}')
+        logging.warning(f'inscriptis error, falling back to bs4: {e}: "{html}"')
         return bs4.BeautifulSoup(html, 'lxml').get_text().strip()
 
 
@@ -226,7 +226,11 @@ def main(argv):
     else:
         paths = glob(f'{args.input}/**/*.xml', recursive=True)
         for p in paths:
-            convert_file(p, args)
+            try:
+                convert_file(p, args)
+            except Exception as e:
+                logging.error(f'failed to convert {p}: {e}')
+                raise
 
 
 if __name__ == '__main__':
