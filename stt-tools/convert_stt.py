@@ -25,8 +25,10 @@ HEADING_TAGS = ('h1', 'h2', 'h3')
 PARAGRAPH_TAG = 'p'
 
 
-# Regex for likely HTML content
+# Regexes for various parts of the document
 LIKELY_HTML_RE = re.compile(r'<[/?]?[a-zA-Z0-9]|&[a-zA-Z0-9#]+;')
+TAG_LINE_RE = re.compile(r'^[a-zäöå0-9, ]+$')
+AUTHOR_RE = re.compile(r'^\s*(-+\s*)?[a-zA-Z]\S+\s*$')
 
 
 def argparser():
@@ -135,7 +137,6 @@ def parse_contentmeta(elem):
 
     # replace lists with single items with that item
     values = { k: v[0] if len(v) == 1 else v for k, v in values.items() }
-
     return values
 
 
@@ -143,6 +144,23 @@ def only_child_with_tag(elem, tag):
     children = list(elem)
     assert len(children) == 1 and children[0].tag == tag
     return children[0]
+
+
+def clean_paragraphs(paragraphs, args):
+    # Skip initial empty and tag lines
+    while paragraphs:
+        if paragraphs[0] and not TAG_LINE_RE.match(paragraphs[0]):
+            break
+        paragraphs = paragraphs[1:]
+
+    # Skip terminal empty and tag line
+    while paragraphs:
+        if paragraphs[-1] and not AUTHOR_RE.match(paragraphs[-1]):
+            break
+        paragraphs = paragraphs[:-1]
+    
+    paragraphs = [p for p in paragraphs if p]
+    return paragraphs
 
 
 def get_contentset_text(elem, args):
@@ -160,7 +178,7 @@ def get_contentset_text(elem, args):
         else:
             logging.warning(f'unexpected tag {e.tag}')
 
-    paragraphs = [p for p in paragraphs if p]
+    paragraphs = clean_paragraphs(paragraphs, args)
     return '\n\n'.join(paragraphs)
 
 
@@ -195,11 +213,11 @@ def convert_file(path, args):
     data = {
         'id': id_,
         'meta': { 'sourcemeta': contentmeta },
-        'text': text,        
+        'text': text,
     }
     print(json.dumps(data, ensure_ascii=False))
-    
-    
+
+
 def main(argv):
     args = argparser().parse_args(argv[1:])
 
