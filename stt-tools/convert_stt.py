@@ -67,7 +67,7 @@ def normalize_html_space(string):
     # Less aggressive space normalization for text generated from HTML.
     string = string.strip()
     string = re.sub(r'\n\n\n+', '\n\n', string)
-    string = '\n'.join(l.strip() for l in string.splitlines())
+    string = '\n'.join(' '.join(l.split()) for l in string.splitlines())
     return string
 
 
@@ -146,20 +146,54 @@ def only_child_with_tag(elem, tag):
     return children[0]
 
 
-def clean_paragraphs(paragraphs, args):
-    # Skip initial empty and tag lines
+def remove_tag_lines(paragraphs):
     while paragraphs:
         if paragraphs[0] and not TAG_LINE_RE.match(paragraphs[0]):
             break
         paragraphs = paragraphs[1:]
+    return paragraphs
 
-    # Skip terminal empty and tag line
+
+def remove_author_lines(paragraphs):
     while paragraphs:
         if paragraphs[-1] and not AUTHOR_RE.match(paragraphs[-1]):
             break
         paragraphs = paragraphs[:-1]
+    return paragraphs
+
+
+def remove_paragraph_comments(paragraph):
+    # Comments typically delimited by two or more slashes
+    if '//' not in paragraph:
+        return paragraph    # fast, most paragraphs
+
+    # By far the most prominent set of exceptions are "http://" and
+    # similar; temporarily escape these to avoid interpreting them
+    # as comments
+    ESCAPE = '[[DOUBLESLASH]]'
+    assert ESCAPE not in paragraph
+    paragraph = re.sub(r'((:?https?|ftp):)//', r'\1'+ESCAPE, paragraph)
+
+    # Remove comments
+    paragraph = re.sub(r'//+.*//+', ' ', paragraph, flags=re.IGNORECASE)
+
+    # Renormalize space
+    paragraph = '\n'.join(' '.join(l.split()) for l in paragraph.splitlines())
     
-    paragraphs = [p for p in paragraphs if p]
+    # Unescape
+    paragraph = paragraph.replace(ESCAPE, '//')
+    return paragraph
+
+
+def remove_comments(paragraphs):
+    return [remove_paragraph_comments(p) for p in paragraphs]
+
+
+def clean_paragraphs(paragraphs, args):
+    paragraphs = remove_tag_lines(paragraphs)
+    paragraphs = remove_author_lines(paragraphs)
+    paragraphs = remove_comments(paragraphs)
+    paragraphs = [p for p in paragraphs if p and not p.isspace()]
     return paragraphs
 
 
