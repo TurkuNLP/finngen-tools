@@ -15,6 +15,7 @@ import xml.etree.ElementTree as ET
 import inscriptis    # HTML to readable text
 import bs4    # HTML to text fallback
 
+from string import punctuation
 from collections import defaultdict
 from glob import glob
 from argparse import ArgumentParser
@@ -120,7 +121,7 @@ def has_html(content):
         return False
 
 
-def get_clean_text(content, args):
+def get_normalized_text(content, args):
     if args.no_html_processing or not has_html(content):
         return normalize_text(content, args)
     else:
@@ -189,10 +190,46 @@ def remove_comments(paragraphs):
     return [remove_paragraph_comments(p) for p in paragraphs]
 
 
+def remove_paragraph_creditline(paragraph):
+    if '(STT' not in paragraph:
+        return paragraph
+    paragraph = re.sub(r'\(STT[^)]*?\)([!?.,])', r'\1', paragraph)
+    paragraph = re.sub(r'\(STT[^)]*?\)[a-zäöå /-]*$', '', paragraph)
+    paragraph = '\n'.join(' '.join(l.split()) for l in paragraph.splitlines())
+    return paragraph
+
+
+def remove_creditline(paragraphs):
+    return [remove_paragraph_creditline(p) for p in paragraphs]
+
+
+def remove_punct_only(paragraphs):
+    return [
+        p for p in paragraphs
+        if not all(c in punctuation or c.isspace() for c in p)
+    ]
+
+
 def clean_paragraphs(paragraphs, args):
+    # Remove tags, comments, and other non-prose material from paragraphs.
+    # For example, for the input
+    # [
+    #     "puolueet",
+    #     "kiinan puoluekokous",
+    #     "///jatkettu versio///",
+    #     "Kahdeksan voimahahmoa jättämässä puolueen johtopaikat Kiinassa
+    #      Peking, 16. 10. (STT—Reuter—TT—AFP)"
+    # ]
+    # the function will return
+    # [
+    #     "Kahdeksan voimahahmoa jättämässä puolueen johtopaikat Kiinassa
+    #      Peking, 16. 10."
+    # ]
+    paragraphs = remove_comments(paragraphs)
     paragraphs = remove_tag_lines(paragraphs)
     paragraphs = remove_author_lines(paragraphs)
-    paragraphs = remove_comments(paragraphs)
+    paragraphs = remove_creditline(paragraphs)
+    paragraphs = remove_punct_only(paragraphs)
     paragraphs = [p for p in paragraphs if p and not p.isspace()]
     return paragraphs
 
@@ -207,7 +244,7 @@ def get_contentset_text(elem, args):
     for e in elem:
         if e.tag in HEADING_TAGS or e.tag == PARAGRAPH_TAG:
             content = subtree_text(e)
-            text = get_clean_text(content, args)
+            text = get_normalized_text(content, args)
             paragraphs.append(text)
         else:
             logging.warning(f'unexpected tag {e.tag}')
