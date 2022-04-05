@@ -14,12 +14,12 @@ import xml.etree.ElementTree as ET
 
 import inscriptis    # HTML to readable text
 import bs4    # HTML to text fallback
+import ftfy
 
 from string import punctuation
 from collections import defaultdict
 from glob import glob
 from argparse import ArgumentParser
-
 
 # XML tags to process
 HEADING_TAGS = ('h1', 'h2', 'h3')
@@ -28,7 +28,7 @@ PARAGRAPH_TAG = 'p'
 
 # Regexes for various parts of the document
 LIKELY_HTML_RE = re.compile(r'<[/?]?[a-zA-Z0-9]|&[a-zA-Z0-9#]+;')
-TAG_LINE_RE = re.compile(r'^[a-zäöå0-9, ]+$')
+TAG_LINE_RE = re.compile(r'^[a-zäöå0-9, -]+$')
 AUTHOR_RE = re.compile(r'^\s*(-+\s*)?[a-zA-Z]\S+\s*$')
 
 
@@ -64,8 +64,8 @@ def normalize_space(string):
     return ' '.join(string.split())
 
 
-def normalize_html_space(string):
-    # Less aggressive space normalization for text generated from HTML.
+def normalize_line_space(string):
+    # Space normalization that preserves line breaks within paragraphs
     string = string.strip()
     string = re.sub(r'\n\n\n+', '\n\n', string)
     string = '\n'.join(' '.join(l.split()) for l in string.splitlines())
@@ -88,7 +88,7 @@ def normalize_html_text(string, args):
     if args.unicode_norm != 'None':
         string = normalize_unicode(string, args)
     if not args.no_space_norm:
-        string = normalize_html_space(string)
+        string = normalize_line_space(string)
     return string
 
 
@@ -121,12 +121,14 @@ def has_html(content):
         return False
 
 
-def get_normalized_text(content, args):
+def get_normalized_paragraphs(content, args):
     if args.no_html_processing or not has_html(content):
-        return normalize_text(content, args)
+        paragraphs = [p for p in re.split(r'\n\n+', content) if p]
+        return [normalize_text(p, args) for p in paragraphs]
     else:
         text = html_to_text(content)
-        return normalize_html_text(text, args)
+        text = normalize_html_text(text, args)
+        return [p for p in re.split(r'\n\n+', text) if p]
 
 
 def parse_contentmeta(elem):
@@ -180,7 +182,11 @@ def remove_paragraph_comments(paragraph):
 
     # Renormalize space
     paragraph = '\n'.join(' '.join(l.split()) for l in paragraph.splitlines())
-    
+
+    # If comment markers remain, drop the whole paragraph
+    if '///' in paragraph:
+        paragraph = ''
+
     # Unescape
     paragraph = paragraph.replace(ESCAPE, '//')
     return paragraph
@@ -188,6 +194,31 @@ def remove_paragraph_comments(paragraph):
 
 def remove_comments(paragraphs):
     return [remove_paragraph_comments(p) for p in paragraphs]
+
+
+def remove_paragraph_inserts(paragraph):
+    if not any(s in paragraph for s in ('***', '---', '___', '===')):
+        return paragraph
+
+    # Remove inserts such as "***** TIEDOTE*TIEDOTE*TIEDOTE *****"
+    paragraph = re.sub(r'\*{3}[A-ZÅÄÖ0-9 *-]*$', ' ', paragraph)
+    paragraph = re.sub(r'\*{3}.*?\*{3,}', ' ', paragraph)
+
+    # Drop remaining "*TIEDOTE*TIEDOTE*TIEDOTE*" and similar
+    if paragraph.startswith('*') and 'TIEDOTE' in paragraph:
+        paragraph = ''
+    if paragraph.startswith('*') and len(paragraph) < 60:
+        paragraph = ''
+
+    # Reduce inserts such as "----------------------"
+    for s in ('***', '---', '___', '==='):
+        paragraph = re.sub(re.escape(s)+r'+', s, paragraph)
+
+    return paragraph
+
+
+def remove_inserts(paragraphs):
+    return [remove_paragraph_inserts(p) for p in paragraphs]
 
 
 def remove_paragraph_creditline(paragraph):
@@ -210,6 +241,13 @@ def remove_punct_only(paragraphs):
     ]
 
 
+def fix_texts(paragraphs):
+    return [
+        normalize_line_space(ftfy.fix_text(p))
+        for p in paragraphs
+    ]
+
+
 def clean_paragraphs(paragraphs, args):
     # Remove tags, comments, and other non-prose material from paragraphs.
     # For example, for the input
@@ -226,11 +264,49 @@ def clean_paragraphs(paragraphs, args):
     #      Peking, 16. 10."
     # ]
     paragraphs = remove_comments(paragraphs)
+    paragraphs = remove_inserts(paragraphs)
     paragraphs = remove_tag_lines(paragraphs)
     paragraphs = remove_author_lines(paragraphs)
     paragraphs = remove_creditline(paragraphs)
     paragraphs = remove_punct_only(paragraphs)
+    paragraphs = fix_texts(paragraphs)
     paragraphs = [p for p in paragraphs if p and not p.isspace()]
+    return paragraphs
+
+
+def has_sentence_ending_punctuation(string):
+    return string and string.rstrip()[-1] in '.:!?'
+
+
+def potential_partial_heading_start(string):
+    return (
+        string and
+        (string[0].isupper() or string[0].isdigit()) and
+        len(string) < 50 and
+        not has_sentence_ending_punctuation(string)
+    )
+
+
+def likely_partial_heading_end(string):
+    return (
+        string and
+        string[0].islower() and
+        len(string) < 50 and
+        not has_sentence_ending_punctuation(string)
+    )
+
+
+def join_split_headings(paragraphs):
+    # Headings are split across paragraphs in some documents; rejoin
+    # heuristically. (Mostly happens in pre-2000 papers.)
+    i = 1
+    while i < len(paragraphs):
+        if (likely_partial_heading_end(paragraphs[i]) and
+            potential_partial_heading_start(paragraphs[i-1])):
+            paragraphs[i-1] = paragraphs[i-1] + ' ' + paragraphs[i]
+            paragraphs = paragraphs[:i] + paragraphs[i+1:]
+        else:
+            i += 1
     return paragraphs
 
 
@@ -244,12 +320,13 @@ def get_contentset_text(elem, args):
     for e in elem:
         if e.tag in HEADING_TAGS or e.tag == PARAGRAPH_TAG:
             content = subtree_text(e)
-            text = get_normalized_text(content, args)
-            paragraphs.append(text)
+            paragraphs.extend(get_normalized_paragraphs(content, args))
         else:
             logging.warning(f'unexpected tag {e.tag}')
 
     paragraphs = clean_paragraphs(paragraphs, args)
+    paragraphs = join_split_headings(paragraphs)
+
     return '\n\n'.join(paragraphs)
 
 
