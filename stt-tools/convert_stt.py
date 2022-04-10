@@ -25,11 +25,26 @@ from argparse import ArgumentParser
 HEADING_TAGS = ('h1', 'h2', 'h3')
 PARAGRAPH_TAG = 'p'
 
-
 # Regexes for various parts of the document
 LIKELY_HTML_RE = re.compile(r'<[/?]?[a-zA-Z0-9]|&[a-zA-Z0-9#]+;')
 TAG_LINE_RE = re.compile(r'^[a-zäöå0-9, -]+$')
-AUTHOR_RE = re.compile(r'^\s*(-+\s*)?[a-zA-Z]\S+\s*$')
+AUTHOR_RE = re.compile(r'^\s*([/-]+\s*)?[a-zäöåA-ZÄÖÅ]\S*\s*$')
+
+# Common author lines
+KNOWN_AUTHORS = {
+    '-jv', '-mal', '-ns', '-nt', '-po', '-ps', '-psi', 'ah', 'aih', 'aj', 'am',
+    'anma', 'anna', 'at', 'au', 'ek', 'elko', 'elr', 'en', 'eska', 'ev', 'ha',
+    'hek', 'hesi', 'hk', 'hku', 'hl', 'ht', 'hv', 'hw', 'jali', 'jas', 'jaso',
+    'jek', 'jh', 'jk', 'joyl', 'js', 'jtv', 'juan', 'juse', 'juvu', 'jvr', 'kh',
+    'ki', 'kife', 'kl', 'kmi', 'kp', 'ks', 'ksy', 'kv', 'la', 'lak', 'lefa',
+    'lf', 'lk', 'ls', 'mam', 'me', 'mh', 'mi', 'mk', 'mm', 'mmr', 'mp', 'mpy',
+    'mr', 'msi', 'msv', 'muks', 'mv', 'må', 'ns', 'oak', 'ok', 'ola', 'op',
+    'pemo', 'pepo', 'pf', 'pir', 'pjm', 'pk', 'pka', 'pks', 'pls', 'pn', 'ppa',
+    'pph', 'pr', 'ps', 'psk', 'ptp', 'ral', 'rami', 'rana', 'rera', 'rila',
+    'rj', 'rm', 'rmk', 'ros-' 'rs', 'rt', 'sa', 'sani', 'sato', 'sepe', 'sm',
+    'sn', 'sss', 'sv', 'th', 'tjm', 'tk', 'tl', 'tm', 'tn', 'tomi', 'ts', 'tw',
+    'uj/uj', 'ull', 'umh', 'uo', 'voa',
+}
 
 
 def argparser():
@@ -162,6 +177,7 @@ def remove_author_lines(paragraphs):
         if paragraphs[-1] and not AUTHOR_RE.match(paragraphs[-1]):
             break
         paragraphs = paragraphs[:-1]
+    paragraphs = [p for p in paragraphs if not p.strip() in KNOWN_AUTHORS]
     return paragraphs
 
 
@@ -175,16 +191,18 @@ def remove_paragraph_comments(paragraph):
     # as comments
     ESCAPE = '[[DOUBLESLASH]]'
     assert ESCAPE not in paragraph
-    paragraph = re.sub(r'((:?https?|ftp):)//', r'\1'+ESCAPE, paragraph)
+    paragraph = re.sub(r'((:?https?|ftp):)//', r'\1'+ESCAPE, paragraph,
+                       flags=re.IGNORECASE)
 
     # Remove comments
-    paragraph = re.sub(r'//+.*//+', ' ', paragraph, flags=re.IGNORECASE)
+    paragraph = re.sub(r'//+.*//+', ' ', paragraph)
 
     # Renormalize space
     paragraph = '\n'.join(' '.join(l.split()) for l in paragraph.splitlines())
 
-    # If comment markers remain, drop the whole paragraph
-    if '///' in paragraph:
+    # If comment markers remain in a reasonably short paragraph, drop
+    # the whole paragraph
+    if '//' in paragraph and len(paragraph) < 80:
         paragraph = ''
 
     # Unescape
@@ -197,7 +215,7 @@ def remove_comments(paragraphs):
 
 
 def remove_paragraph_inserts(paragraph):
-    if not any(s in paragraph for s in ('***', '---', '___', '===')):
+    if not any(s in paragraph for s in ('*', '---', '___', '===')):
         return paragraph
 
     # Remove inserts such as "***** TIEDOTE*TIEDOTE*TIEDOTE *****"
@@ -205,9 +223,9 @@ def remove_paragraph_inserts(paragraph):
     paragraph = re.sub(r'\*{3}.*?\*{3,}', ' ', paragraph)
 
     # Drop remaining "*TIEDOTE*TIEDOTE*TIEDOTE*" and similar
-    if paragraph.startswith('*') and 'TIEDOTE' in paragraph:
+    if paragraph.strip().startswith('*') and 'TIEDOTE' in paragraph:
         paragraph = ''
-    if paragraph.startswith('*') and len(paragraph) < 60:
+    elif paragraph.strip().startswith('***') and len(paragraph) < 60:
         paragraph = ''
 
     # Reduce inserts such as "----------------------"
