@@ -1,0 +1,25 @@
+# Processing of the Finnish News Agency Archive 1992-2018 corpus
+
+## Download data
+
+Original file `stt-fi-1992-2018-src.zip` downloaded from
+<http://urn.fi/urn:nbn:fi:lb-2019041501> (Academic license,
+registration required)
+
+## Unpack
+
+```
+unzip -d unpacked stt-fi-1992-2018-src.zip
+for f in unpacked/stt-fi-1992-2018-src/data/arkistosiirto*.zip; do
+    unzip -d unpacked $f;
+done
+```
+
+## Convert
+
+```
+mkdir converted
+for d in unpacked/arkistosiirto*; do
+    python3 convert_stt.py $d > converted/$(basename $d).jsonl;
+done
+```
