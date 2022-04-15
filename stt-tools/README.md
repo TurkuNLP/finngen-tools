@@ -30,15 +30,32 @@ done
 cat converted/*.jsonl > combined.jsonl
 ```
 
-## Checksum
+## Rename
 
 ```
-md5sum combined.jsonl
+cp combined.jsonl stt-fi-1992-2018.jsonl
+```
+
+## Checksum for converted corpus
+
+```
+md5sum stt-fi-1992-2018.jsonl
 ```
 
 ```
-1911f26ea5ddfab77011929b33f7caff  combined.jsonl
+1911f26ea5ddfab77011929b33f7caff  stt-fi-1992-2018.jsonl
 ```
+
+## Statistics for converted corpus
+
+```
+python3 finngen-tools/jsonl_stats.py stt-fi-1992-2018.jsonl
+```
+
+|docs|words|chars|
+|----|-----|-----|
+|2848322|693718677|4145360051|
+|(2.8M)|(693.7M)|(4.1G)|
 
 ## Deduplicate
 
@@ -90,3 +107,30 @@ Reverse back
 ```
 tac combined.rev.filtered.jsonl > combined.filtered.jsonl
 ```
+
+## Rename
+
+```
+mv combined.filtered.jsonl stt-fi-1992-2018.dedup.jsonl
+```
+
+## Checksum for deduplicated
+
+```
+md5sum stt-fi-1992-2018.dedup.jsonl
+```
+
+```
+b5ab84ad93fa284ec2ae94bb5dacc91d  stt-fi-1992-2018.dedup.jsonl
+```
+
+## Statistics for deduplicated corpus
+
+```
+python3 finngen-tools/jsonl_stats.py stt-fi-1992-2018.dedup.jsonl
+```
+
+|docs|words|chars|
+|----|-----|-----|
+|2125676|442462974|2734899491|
+|(2.1M)|(442.5M)|(2.7G)|
