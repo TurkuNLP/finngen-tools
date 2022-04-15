@@ -2,7 +2,7 @@
 
 # Convert the XML format in which the STT corpus
 # (http://urn.fi/urn:nbn:fi:lb-2019041501) is distributed into a
-# simple JSONL format with keys 'td', 'text', and 'meta'.
+# simple JSONL format with keys 'id', 'text', and 'meta'.
 
 import sys
 import os
