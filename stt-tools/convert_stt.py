@@ -391,7 +391,7 @@ def main(argv):
         convert_file(args.input, args)
     else:
         paths = glob(f'{args.input}/**/*.xml', recursive=True)
-        for p in paths:
+        for p in sorted(paths):
             try:
                 convert_file(p, args)
             except Exception as e:
