@@ -17,6 +17,7 @@ from bs4 import BeautifulSoup
 from markdown import markdown
 
 
+# Content types not included in converted text
 IGNORED_CONTENT_TYPES = {
     'image',
     'image-pair',
@@ -46,7 +47,12 @@ IGNORED_CONTENT_TYPES = {
 }
 
 
+# Initial character for 'bullet-list' items
 BULLET_POINT = '•'
+
+
+# Different unicode dashes for space normalization heuristics
+DASHES = '-‐‑‒–—―−﹣－'
 
 
 def argparser():
@@ -68,12 +74,18 @@ def likely_multiple_paragraphs(text):
 
 
 def normalize_paragraph_space(text):
+    ESCAPE = '<<<LINEBREAK>>>'
     if likely_list(text) or likely_multiple_paragraphs(text):
         # keep linebreaks, normalize lines separately
         return '\n'.join(' '.join(l.split()) for l in text.split('\n')).strip()
     else:
-        # assume linebreaks 
-        return ' '.join(text.split())
+        # drop linebreaks, leaving ones before dashes
+        assert ESCAPE not in text
+        lines = text.split('\n')
+        lines = [re.sub(r'^(['+DASHES+r'])', ESCAPE+r'\1', l) for l in lines]
+        text = ' '.join(' '.join(lines).split())
+        text = re.sub(r' *'+ESCAPE, r'\n', text).strip()
+        return text
 
 
 def normalize_space(text):
