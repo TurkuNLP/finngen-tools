@@ -55,8 +55,25 @@ def argparser():
     return ap
 
 
+def likely_list(text):
+    # heuristic for text likely being list-like (mostly short lines)
+    lines = text.split('\n')
+    short_lines = [l for l in lines if len(l) < 60 and l and not l.isspace()]
+    return lines and len(short_lines)/len(lines) > 0.8
+
+
+def likely_multiple_paragraphs(text):
+    # heuristic for text likely containing multiple paragraphs
+    return len(text) > 800
+
+
 def normalize_paragraph_space(text):
-    return '\n'.join(' '.join(l.split()) for l in text.split('\n')).strip()
+    if likely_list(text) or likely_multiple_paragraphs(text):
+        # keep linebreaks, normalize lines separately
+        return '\n'.join(' '.join(l.split()) for l in text.split('\n')).strip()
+    else:
+        # assume linebreaks 
+        return ' '.join(text.split())
 
 
 def normalize_space(text):
@@ -134,8 +151,8 @@ def convert_document(document, args):
                 pass
             else:
                 logging.warning(f'ignoring content of type {content["type"]}')
-        except:
-            logging.error(f'failed to convert: {content}')
+        except Exception as e:
+            logging.error(f'failed to convert: {e}: {content}')
             pass
     return texts
 
