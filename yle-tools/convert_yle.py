@@ -5,10 +5,12 @@
 # into a simple JSONL format with keys 'id', 'text', and 'meta'.
 
 import sys
+import os
 import re
 import json
 import logging
 
+from glob import glob
 from argparse import ArgumentParser
 
 from bs4 import BeautifulSoup
@@ -49,7 +51,7 @@ BULLET_POINT = '•'
 
 def argparser():
     ap = ArgumentParser()
-    ap.add_argument('json', nargs='+')
+    ap.add_argument('input', metavar='FILE-OR-DIR')
     return ap
 
 
@@ -161,13 +163,25 @@ def convert_yle_json(fn, data, args):
         print(json.dumps(converted, sort_keys=True, ensure_ascii=False))
 
 
+def convert_file(fn, args):
+    with open(fn) as f:
+        data = json.load(f)    
+    return convert_yle_json(fn, data, args)
+
+
 def main(argv):
     args = argparser().parse_args(argv[1:])
 
-    for fn in args.json:
-        with open(fn) as f:
-            data = json.load(f)
-        convert_yle_json(fn, data, args)
+    if os.path.isfile(args.input):
+        convert_file(args.input, args)
+    else:
+        paths = glob(f'{args.input}/**/*.json', recursive=True)
+        for p in sorted(paths):
+            try:
+                convert_file(p, args)
+            except Exception as e:
+                logging.error(f'failed to convert {p}: {e}')
+                raise
 
 
 if __name__ == '__main__':
