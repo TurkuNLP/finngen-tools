@@ -5,16 +5,19 @@
 # into a simple JSONL format with keys 'id', 'text', and 'meta'.
 
 import sys
+import os
 import re
 import json
 import logging
 
+from glob import glob
 from argparse import ArgumentParser
 
 from bs4 import BeautifulSoup
 from markdown import markdown
 
 
+# Content types not included in converted text
 IGNORED_CONTENT_TYPES = {
     'image',
     'image-pair',
@@ -44,17 +47,45 @@ IGNORED_CONTENT_TYPES = {
 }
 
 
+# Initial character for 'bullet-list' items
 BULLET_POINT = '•'
+
+
+# Different unicode dashes for space normalization heuristics
+DASHES = '-‐‑‒–—―−﹣－'
 
 
 def argparser():
     ap = ArgumentParser()
-    ap.add_argument('json', nargs='+')
+    ap.add_argument('input', metavar='FILE-OR-DIR')
     return ap
 
 
+def likely_list(text):
+    # heuristic for text likely being list-like (mostly short lines)
+    lines = text.split('\n')
+    short_lines = [l for l in lines if len(l) < 60 and l and not l.isspace()]
+    return lines and len(short_lines)/len(lines) > 0.8
+
+
+def likely_multiple_paragraphs(text):
+    # heuristic for text likely containing multiple paragraphs
+    return len(text) > 800
+
+
 def normalize_paragraph_space(text):
-    return '\n'.join(' '.join(l.split()) for l in text.split('\n')).strip()
+    ESCAPE = '<<<LINEBREAK>>>'
+    if likely_list(text) or likely_multiple_paragraphs(text):
+        # keep linebreaks, normalize lines separately
+        return '\n'.join(' '.join(l.split()) for l in text.split('\n')).strip()
+    else:
+        # drop linebreaks, leaving ones before dashes
+        assert ESCAPE not in text
+        lines = text.split('\n')
+        lines = [re.sub(r'^(['+DASHES+r'])', ESCAPE+r'\1', l) for l in lines]
+        text = ' '.join(' '.join(lines).split())
+        text = re.sub(r' *'+ESCAPE, r'\n', text).strip()
+        return text
 
 
 def normalize_space(text):
@@ -132,8 +163,8 @@ def convert_document(document, args):
                 pass
             else:
                 logging.warning(f'ignoring content of type {content["type"]}')
-        except:
-            logging.error(f'failed to convert: {content}')
+        except Exception as e:
+            logging.error(f'failed to convert: {e}: {content}')
             pass
     return texts
 
@@ -161,13 +192,25 @@ def convert_yle_json(fn, data, args):
         print(json.dumps(converted, sort_keys=True, ensure_ascii=False))
 
 
+def convert_file(fn, args):
+    with open(fn) as f:
+        data = json.load(f)    
+    return convert_yle_json(fn, data, args)
+
+
 def main(argv):
     args = argparser().parse_args(argv[1:])
 
-    for fn in args.json:
-        with open(fn) as f:
-            data = json.load(f)
-        convert_yle_json(fn, data, args)
+    if os.path.isfile(args.input):
+        convert_file(args.input, args)
+    else:
+        paths = glob(f'{args.input}/**/*.json', recursive=True)
+        for p in sorted(paths):
+            try:
+                convert_file(p, args)
+            except Exception as e:
+                logging.error(f'failed to convert {p}: {e}')
+                raise
 
 
 if __name__ == '__main__':
