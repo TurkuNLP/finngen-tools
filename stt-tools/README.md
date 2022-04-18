@@ -43,18 +43,18 @@ md5sum stt-fi-1992-2018.jsonl
 ```
 
 ```
-1911f26ea5ddfab77011929b33f7caff  stt-fi-1992-2018.jsonl
+fecc6b2a65ca001c72351036b780f819  stt-fi-1992-2018.jsonl
 ```
 
 ## Statistics for converted corpus
 
 ```
-python3 finngen-tools/jsonl_stats.py stt-fi-1992-2018.jsonl
+python3 ../jsonl_stats.py stt-fi-1992-2018.jsonl
 ```
 
 |docs|words|chars|
 |----|-----|-----|
-|2848322|693718677|4145360051|
+|2848322|693722035|4145355415|
 |(2.8M)|(693.7M)|(4.1G)|
 
 ## Deduplicate
@@ -87,31 +87,31 @@ Filter out duplicates
 
 ```
 python3 onion-tools/filter_onion.py combined.rev.onion \
-    > combined.rev.filtered.onion
+    > combined.rev.dedup.onion
 ```
 
 ```
-output 406112341/628430118 (64.6%) lines
-output 2125676/2848322 (74.6%) docs
+output 406111268/628429632 (64.6%) lines
+output 2125674/2848322 (74.6%) docs
 ```
 
 Convert back to JSONL
 
 ```
-python3 onion-tools/onion_to_jsonl.py combined.rev.filtered.onion \
-    > combined.rev.filtered.jsonl
+python3 onion-tools/onion_to_jsonl.py combined.rev.dedup.onion \
+    > combined.rev.dedup.jsonl
 ```
 
 Reverse back
 
 ```
-tac combined.rev.filtered.jsonl > combined.filtered.jsonl
+tac combined.rev.dedup.jsonl > combined.dedup.jsonl
 ```
 
 ## Rename
 
 ```
-mv combined.filtered.jsonl stt-fi-1992-2018.dedup.jsonl
+mv combined.dedup.jsonl stt-fi-1992-2018.dedup.jsonl
 ```
 
 ## Checksum for deduplicated
@@ -121,16 +121,16 @@ md5sum stt-fi-1992-2018.dedup.jsonl
 ```
 
 ```
-b5ab84ad93fa284ec2ae94bb5dacc91d  stt-fi-1992-2018.dedup.jsonl
+1ef7a5b48c95e71a3cde90118a2ddbe7  stt-fi-1992-2018.dedup.jsonl
 ```
 
 ## Statistics for deduplicated corpus
 
 ```
-python3 finngen-tools/jsonl_stats.py stt-fi-1992-2018.dedup.jsonl
+python3 ../jsonl_stats.py stt-fi-1992-2018.dedup.jsonl
 ```
 
 |docs|words|chars|
 |----|-----|-----|
-|2125676|442462974|2734899491|
+|2125674|442463215|2734890377|
 |(2.1M)|(442.5M)|(2.7G)|
