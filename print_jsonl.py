@@ -9,6 +9,7 @@ from argparse import ArgumentParser
 
 def argparser():
     ap = ArgumentParser()
+    ap.add_argument('-n', '--no-header', action='store_true')
     ap.add_argument('-r', '--ratio', default=None, type=float)
     ap.add_argument('jsonl', nargs='+')
     return ap
@@ -23,7 +24,8 @@ def main(argv):
                 if args.ratio and random() > args.ratio:
                     continue
                 data = json.loads(l)
-                print('-'*20, data['id'], '-'*20)
+                if not args.no_header:
+                    print('-'*20, data['id'], '-'*20)
                 print(data['text'])
 
 
