@@ -194,3 +194,122 @@ done
 |----|-----|-----|
 |929|260910|1782357|
 |(929.0)|(260.9K)|(1.8M)|
+
+## Filter
+
+Heuristic filter to remove documents that aren't primarily Finnish prose text.
+
+```
+ls ylenews-fi-*.dedup.jsonl | egrep -v rev | while read f;
+    do echo '###' $f;
+    python3 ../filter_jsonl.py \
+        --digit-ratio 0.1 \
+        --punct-ratio 0.1 \
+        --upper-ratio 0.1 \
+        --foreign-ratio 0.01 \
+        --short-ratio 0.05 \
+        --min-words 25 \
+        --avg-len 5 \
+        --lang-prob 0.999 \
+        $f > ${f%.jsonl}.filtered.jsonl
+done
+```
+
+### ylenews-fi-2011-2018.dedup.jsonl
+
+```
+ylenews-fi-2011-2018.dedup.jsonl:	fail-avg-len	1319 (0.2%)
+ylenews-fi-2011-2018.dedup.jsonl:	fail-digit-ratio	577 (0.1%)
+ylenews-fi-2011-2018.dedup.jsonl:	fail-foreign-ratio	503 (0.1%)
+ylenews-fi-2011-2018.dedup.jsonl:	fail-lang-prob	2043 (0.3%)
+ylenews-fi-2011-2018.dedup.jsonl:	fail-min-words	4154 (0.6%)
+ylenews-fi-2011-2018.dedup.jsonl:	fail-punct-ratio	285 (0.0%)
+ylenews-fi-2011-2018.dedup.jsonl:	fail-short-ratio	5288 (0.8%)
+ylenews-fi-2011-2018.dedup.jsonl:	fail-upper-ratio	1383 (0.2%)
+ylenews-fi-2011-2018.dedup.jsonl:	pass-all	674021 (97.7%)
+ylenews-fi-2011-2018.dedup.jsonl: output 674021/689573 documents (97.7%)
+```
+
+### ylenews-fi-2011-2018-selko.dedup.jsonl
+
+```
+ylenews-fi-2011-2018-selko.dedup.jsonl:	fail-avg-len	7 (0.3%)
+ylenews-fi-2011-2018-selko.dedup.jsonl:	fail-foreign-ratio	1 (0.0%)
+ylenews-fi-2011-2018-selko.dedup.jsonl:	fail-lang-prob	3 (0.1%)
+ylenews-fi-2011-2018-selko.dedup.jsonl:	fail-min-words	251 (11.1%)
+ylenews-fi-2011-2018-selko.dedup.jsonl:	pass-all	1990 (88.4%)
+ylenews-fi-2011-2018-selko.dedup.jsonl: output 1990/2252 documents (88.4%)
+```
+
+### ylenews-fi-2019-2020.dedup.jsonl
+
+```
+ylenews-fi-2019-2020.dedup.jsonl:	fail-avg-len	221 (0.2%)
+ylenews-fi-2019-2020.dedup.jsonl:	fail-digit-ratio	47 (0.0%)
+ylenews-fi-2019-2020.dedup.jsonl:	fail-foreign-ratio	228 (0.2%)
+ylenews-fi-2019-2020.dedup.jsonl:	fail-lang-prob	169 (0.1%)
+ylenews-fi-2019-2020.dedup.jsonl:	fail-min-words	1271 (1.0%)
+ylenews-fi-2019-2020.dedup.jsonl:	fail-punct-ratio	3 (0.0%)
+ylenews-fi-2019-2020.dedup.jsonl:	fail-short-ratio	661 (0.5%)
+ylenews-fi-2019-2020.dedup.jsonl:	fail-upper-ratio	66 (0.1%)
+ylenews-fi-2019-2020.dedup.jsonl:	pass-all	121690 (97.9%)
+ylenews-fi-2019-2020.dedup.jsonl: output 121690/124356 documents (97.9%)
+```
+
+### ylenews-fi-2019-2020-selko.dedup.jsonl
+
+```
+ylenews-fi-2019-2020-selko.dedup.jsonl:	fail-avg-len	1 (0.1%)
+ylenews-fi-2019-2020-selko.dedup.jsonl:	fail-min-words	123 (13.2%)
+ylenews-fi-2019-2020-selko.dedup.jsonl:	pass-all	805 (86.7%)
+ylenews-fi-2019-2020-selko.dedup.jsonl: output 805/929 documents (86.7%)
+```
+
+## Checksums for deduplicated and filtered corpora
+
+```
+md5sum ylenews-fi-*.dedup.filtered.jsonl
+```
+
+```
+20deeb8e5617d26d4fc75c0967a48d54  ylenews-fi-2011-2018.dedup.filtered.jsonl
+51f950c5df6b8a96a59ecd090784b934  ylenews-fi-2011-2018-selko.dedup.filtered.jsonl
+a1f9b843d2479fb7bfeea71a4cb69ccf  ylenews-fi-2019-2020.dedup.filtered.jsonl
+f1ad2c06aae40644ecf8d0f07df8821f  ylenews-fi-2019-2020-selko.dedup.filtered.jsonl
+```
+
+## Statistics for deduplicated and filtered corpora
+
+```
+for f in ylenews-fi-*.dedup.filtered.jsonl; do
+    echo '###' $f; python3 ../jsonl_stats.py $f;
+done
+```
+
+### ylenews-fi-2011-2018.dedup.filtered.jsonl
+
+|docs|words|chars|
+|----|-----|-----|
+|674021|178238822|1274612172|
+|(674.0K)|(178.2M)|(1.3G)|
+
+### ylenews-fi-2011-2018-selko.dedup.filtered.jsonl
+
+|docs|words|chars|
+|----|-----|-----|
+|1990|599426|4090114|
+|(2.0K)|(599.4K)|(4.1M)|
+
+### ylenews-fi-2019-2020.dedup.filtered.jsonl
+
+|docs|words|chars|
+|----|-----|-----|
+|121690|43212584|311659817|
+|(121.7K)|(43.2M)|(311.7M)|
+
+### ylenews-fi-2019-2020-selko.dedup.filtered.jsonl
+
+|docs|words|chars|
+|----|-----|-----|
+|805|256652|1756920|
+|(805.0)|(256.7K)|(1.8M)|
