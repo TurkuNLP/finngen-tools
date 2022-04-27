@@ -39,13 +39,14 @@ def add_kenlm_perplexity(fn, tokenizer, model, args):
                 logging.error(f'parsing line {ln} in {fn}: {line}')
                 raise
 
-            tokenized_lines = []
-            for line_tokens in tokenize(text, tokenizer, args):
-                tokenized_lines = ' '.join(line_tokens)
-            tokenized = ' '.join(tokenized_lines)
+            total_score, total_words = 0, 0
+            for tokenized in tokenize(text, tokenizer, args):
+                total_score += model.score(' '.join(tokenized))
+                total_words += len(tokenized) + 1 # +1 for EOS
+            perplexity = 10**(-total_score/total_words)
 
             assert PPL_KEY not in data['meta']
-            data['meta'][PPL_KEY] = int(model.perplexity(tokenized))
+            data['meta'][PPL_KEY] = int(perplexity)
 
             print(json.dumps(data, ensure_ascii=False))
 
