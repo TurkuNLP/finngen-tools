@@ -9,11 +9,14 @@ import re
 import json
 import logging
 
-import gcld3
-
 from string import punctuation
 from collections import defaultdict
 from argparse import ArgumentParser
+
+try:
+    import gcld3
+except:
+    logging.warning('failed to import gcld3, --lang-prob not available')
 
 
 # Word regex for e.g. --min-words option
