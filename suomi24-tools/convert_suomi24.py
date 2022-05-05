@@ -70,7 +70,7 @@ def parse_sentence_line(line):
 
 
 def make_id(element):
-    return md5(ET.tostring(element)).hexdigest()
+    return 's24:'+md5(ET.tostring(element)).hexdigest()
 
 
 def parse_attr_value(string):
@@ -171,8 +171,13 @@ def output_text(id_, textelem, strings, options):
 
 def vrt_to_text(fn, options):
     id_, textelem, paraelem, sentelem, strings = None, None, None, None, None
-    with open(fn) as f:
+    with open(fn, 'rb') as f:
         for ln, l in enumerate(f, start=1):
+            try:
+                l = l.decode('utf-8')
+            except:
+                logging.warning(f'error decoding line {ln} in {fn}: "{l}"')
+                l = l.decode('utf-8', errors='ignore')
             if is_comment_line(l):
                 continue
             elif is_text_start_line(l):
@@ -217,7 +222,11 @@ def vrt_to_text(fn, options):
 def main(argv):
     args = argparser().parse_args(argv[1:])
     for fn in args.file:
-        vrt_to_text(fn, args)
+        try:
+            vrt_to_text(fn, args)
+        except Exception as e:
+            logging.error(f'failed to convert {fn}: {e}')
+            raise
 
 
 if __name__ == '__main__':
