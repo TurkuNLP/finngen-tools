@@ -82,6 +82,10 @@ done
 
 Clone tools supporting deduplication with `onion`
 
+```
+git clone https://github.com/spyysalo/onion-tools.git
+```
+
 Reverse for latest-first so that deduplication will remove older versions.
 
 ```
