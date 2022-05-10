@@ -4,32 +4,43 @@
 
 import sys
 import json
+import unicodedata
 
 import kenlm
 
 from argparse import ArgumentParser
 
-# Tokenizer and text escaping need to match the script that was used
-# to prepare texts to build the language model, here assumed to have
-# been tokenizer_jsonl.py
-from tokenize_jsonl import DEFAULT_TOKENIZER, get_tokenizer, tokenize
+from berttokenizer import basic_tokenize
 
 
-# Key for the perplexity value in JSONL
-PPL_KEY = 'kenlm_perplexity'
+# Default key for the perplexity value in JSONL
+DEFAULT_KEY = 'ppl_kenlm'
 
 
 def argparser():
     ap = ArgumentParser()
-    ap.add_argument('-s', '--no-space', default=False, action='store_true',
-                    help='do not encode space characters')
-    ap.add_argument('-t', '--tokenizer', default=DEFAULT_TOKENIZER)
+    ap.add_argument('-k', '--key', default=DEFAULT_KEY, 
+                    help='key for perplexity value')
     ap.add_argument('model', help='KenLM model')
     ap.add_argument('jsonl', nargs='+')
     return ap
 
 
-def add_kenlm_perplexity(fn, tokenizer, model, args):
+def is_punct(string):
+    return all(unicodedata.category(c).startswith('P') for c in string)
+
+
+def word_count(tokenized, args):
+    return sum(not is_punct(t)) for t in tokenized)
+
+
+def tokenize(text, args):
+    for line in text.split('\n'):
+        if line and not line.isspace():
+            yield basic_tokenize(line)
+
+
+def add_perplexity(fn, model, args):
     with open(fn) as f:
         for ln, line in enumerate(f, start=1):
             try:
@@ -40,25 +51,31 @@ def add_kenlm_perplexity(fn, tokenizer, model, args):
                 raise
 
             total_score, total_words = 0, 0
-            for tokenized in tokenize(text, tokenizer, args):
+            for tokenized in tokenize(text, args):
                 total_score += model.score(' '.join(tokenized))
-                total_words += len(tokenized) + 1 # +1 for EOS
+                total_words += word_count(tokenized, args) + 1 # +1 for EOS
             perplexity = 10**(-total_score/total_words)
 
-            assert PPL_KEY not in data['meta']
-            data['meta'][PPL_KEY] = int(perplexity)
+            assert args.key not in data['meta']
+            data['meta'][args.key] = int(perplexity)
 
-            print(json.dumps(data, ensure_ascii=False))
+            if ln % 100 == 0:
+                print(f'Processed {ln} ...', file=sys.stderr, flush=True)
+                flush = True
+            else:
+                flush = False
+            print(json.dumps(data, ensure_ascii=False), flush=flush)
 
 
 def main(argv):
     args = argparser().parse_args(argv[1:])
 
-    tokenizer = get_tokenizer(args)
+    print(f'loading model ... ', file=sys.stderr, end='', flush=True)
     model = kenlm.Model(args.model)
+    print(f'done.', file=sys.stderr, flush=True)
     
     for fn in args.jsonl:
-        add_kenlm_perplexity(fn, tokenizer, model, args)
+        add_perplexity(fn, model, args)
 
 
 if __name__ == '__main__':
