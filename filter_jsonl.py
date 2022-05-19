@@ -25,6 +25,9 @@ WORD_RE = re.compile(r'\b(?:[A-ZÅÄÖ][a-zåäö]{1,}|[a-zåäö]{2,})\b')
 # Short word regex for --short-ratio option
 SHORT_WORD_RE = re.compile(r'\b[a-zåäöA-ZÅÄÖ]\b')
 
+# Tokenization regex for --type-token-ratio option
+TOKENIZE_RE = re.compile(r'([^\W\d_]+|\s+|.)')
+
 # Regex for non-Finnish unicode letter (https://stackoverflow.com/a/6314634)
 FOREIGN_LETTER = re.compile(r'[^\W\d_a-zA-ZåäöÅÄÖ]')
 
@@ -45,6 +48,10 @@ def argparser():
                     help='minimum predicted probability of target language')
     ap.add_argument('-p', '--punct-ratio', default=None, type=float,
                     help='maximum ratio of punctuation characters')
+    ap.add_argument('-r', '--max-repeat', default=None, type=int,
+                    help='maximum short character sequence repetition length')
+    ap.add_argument('-t', '--type-token-ratio', default=None, type=float,
+                    help='minimum type-token ratio')
     ap.add_argument('-u', '--upper-ratio', default=None, type=float,
                     help='maximum ratio of uppercase characters')
     ap.add_argument('-w', '--min-words', default=None, type=int,
@@ -114,6 +121,24 @@ def short_ratio(text):
         return len(short)/(len(words)+len(short))
 
 
+def tokenize(text):
+    return [t for t in TOKENIZE_RE.findall(text) if not t.isspace()]
+
+
+def type_token_ratio(text):
+    tokens = tokenize(text)
+    types = set(tokens)
+    return len(types)/len(tokens)
+
+
+def has_repeat(text, length):
+    if length not in has_repeat.RE:
+        # TODO consider parameterizing short sequence max length (3)
+        has_repeat.RE[length] = re.compile(r'(.{1,3})\1{'+str(length)+'}')
+    return has_repeat.RE[length].search(text) is not None
+has_repeat.RE = {}
+
+
 def filter_text(t, args):
     if not t or t.isspace():
         return 'empty'
@@ -125,12 +150,18 @@ def filter_text(t, args):
         return 'upper-ratio'
     if args.digit_ratio is not None and digit_ratio(t) > args.digit_ratio:
         return 'digit-ratio'
-    if args.foreign_ratio is not None and foreign_ratio(t) > args.foreign_ratio:
+    if args.foreign_ratio is not None and \
+       foreign_ratio(t) > args.foreign_ratio:
         return 'foreign-ratio'
     if args.short_ratio is not None and short_ratio(t) > args.short_ratio:
         return 'short-ratio'
+    if args.type_token_ratio is not None and \
+       type_token_ratio(t) < args.type_token_ratio:
+        return 'type-token-ratio'
     if args.min_words is not None and num_words(t) < args.min_words:
         return 'min-words'
+    if args.max_repeat is not None and has_repeat(t, args.max_repeat+1):
+        return 'max-repeat'
     if args.lang_prob is not None and lang_prob(t) < args.lang_prob:
         return 'lang-prob'
     return None
@@ -170,7 +201,11 @@ def filter_jsonl(fn, args):
             id_, text = data['id'], data['text']
             stats['total-docs'] += 1
             if not filter_document(text, stats, args):
-                print(line, end='')
+                try:
+                    print(line, end='')
+                except BrokenPipeError:
+                    logging.warning('broken pipe, output is incomplete')
+                    break
                 stats['output-docs'] += 1
     report_stats(os.path.basename(fn), stats)
 
