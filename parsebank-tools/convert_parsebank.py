@@ -5,8 +5,10 @@
 # simple JSONL format with keys 'id', 'text', and 'meta'.
 
 import sys
+import re
 import gzip
 import json
+import logging
 import xml.etree.ElementTree as ET
 
 from argparse import ArgumentParser
@@ -21,6 +23,9 @@ REGISTER_LINE_START = '# predicted register: '
 
 # Start of lines with document text
 TEXT_LINE_START = '# text = '
+
+# Regex for attributes (fallback for malformed XML)
+ATTR_RE = re.compile(r'([a-zA-Z_-]+)="(.*?)"\s*')
 
 
 def argparser():
@@ -46,10 +51,21 @@ def is_doc_end_line(line):
 
 
 def doc_attributes(line):
-    assert is_doc_start_line(line)
+    assert line.startswith('# <doc ')
     assert line.endswith('>')
-    elem = ET.fromstring(line[2:] + '</doc>')
-    return elem.attrib
+    line = line[2:-1] + ' />'
+    try:
+        elem = ET.fromstring(line)
+        return elem.attrib
+    except:
+        # Not well-formed XML; probably attribute escaping issues.
+        # Attempt to "parse" with regex
+        attr_str = line[len('<doc '):-len(' />')]
+        attrib = {}
+        for m in ATTR_RE.finditer(attr_str):
+            name, value = m.groups()
+            attrib[name] = value
+        return attrib
 
 
 def rest_of_line_starting_with(lines, start):
@@ -87,9 +103,21 @@ def output_document(lines, args):
         'predicted register': register,
     })
 
+    if 'id' in attrib:
+        id_ = attrib.pop('id')
+    elif 'urn' in attrib:
+        id_ = attrib.pop('urn')
+    else:
+        try:
+            collection, url = attrib.pop('collection'), attrib.pop('url')
+            id_ = f'{collection}:{url}'
+        except:
+            logging.error(f'incomplete attribs: {doc_start} ({attrib})')
+            id_ = 'ERROR'
+
     text = '\n\n'.join(get_paragraphs(lines))
     data = {
-        'id': attrib.pop('id'),
+        'id': 'parsebank:'+id_,
         'text': text,
         'meta': attrib,
     }
