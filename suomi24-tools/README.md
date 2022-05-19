@@ -138,6 +138,7 @@ python3 ../jsonl_stats.py suomi24-2001-2020.dedup.jsonl
 
 Heuristic filter to remove documents that aren't primarily Finnish prose text.
 
+```
 python3 ../filter_jsonl.py \
     --digit-ratio 0.1 \
     --punct-ratio 0.1 \
