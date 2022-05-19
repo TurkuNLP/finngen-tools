@@ -1,4 +1,4 @@
-# Processing of the Finnish News Agency Archive 1992-2018 corpus
+# Processing of the Suomi24 2001-2020 corpus 
 
 ## Download data
 
@@ -186,4 +186,3 @@ python3 ../jsonl_stats.py suomi24-2001-2020.dedup.filtered.jsonl
 |----|-----|-----|
 |44871518|3536752031|22193001509|
 |(44.9M)|(3.5G)|(22.2G)|
-
