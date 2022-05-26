@@ -104,6 +104,14 @@ def get_refers_to(record):
     return record.rec_headers.get_header('WARC-Refers-To')
 
 
+def get_record_date(record):
+    return record.rec_headers.get_header('WARC-Date')
+
+
+def get_content_length(record):
+    return int(record.rec_headers.get_header('Content-Length'))
+
+
 def get_mime_type(record):
     type_ = record.rec_headers.get_header('WARC-Identified-Payload-Type')
     if type_ is not None:
@@ -118,9 +126,18 @@ def justext_extract(content):
     return '\n\n'.join(p.text for p in paragraphs)
 
 
+def trafilatura_extract(content, uri, args):
+    options = {
+        'include_tables': False,
+        #'favor_precision': True,
+        #'favor_recall': True,
+    }
+    return trafilatura.extract(content, url=uri, **options)
+
+
 def extract_text_from_html(id_, uri, mime_type, content, args):
     if args.extractor == 'trafilatura':
-        return trafilatura.extract(content, url=uri)
+        return trafilatura_extract(content, uri, args)
     elif args.extractor == 'justext':
         return justext_extract(content)
     else:
@@ -157,6 +174,11 @@ def clean_text(text):
     return text
 
 
+def clean_id(id_):
+    assert id_.startswith('<') and id_.endswith('>')
+    return id_[1:-1]
+
+
 def convert_warc_stream(stream, stats, args):
     for record in ArchiveIterator(stream):
         stats['total'] += 1
@@ -172,9 +194,12 @@ def convert_warc_stream(stream, stats, args):
             id_ = get_record_id(record)
         else:
             id_ = get_refers_to(record)
+        id_ = clean_id(id_)
 
         uri = get_target_uri(record)
         type_ = get_mime_type(record)
+        date = get_record_date(record)
+        length = get_content_length(record)
         content = record.content_stream().read()
 
         if not content:
@@ -202,11 +227,13 @@ def convert_warc_stream(stream, stats, args):
             continue
 
         data = {
-            'id': id_,
+            'id': f'commoncrawl:{id_}',
             'text': text_content,
             'meta': {
-                'target_uri': uri,
+                'uri': uri,
                 'source_type': type_,
+                'download_date': date,
+                'source_length': length,
             },
         }
         print(json.dumps(data, ensure_ascii=False))
