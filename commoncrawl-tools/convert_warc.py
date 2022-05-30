@@ -29,6 +29,7 @@ _HTML_LIKE_MIME_TYPES = {
     'text/html',
     'application/xhtml+xml',
     'application/xml',
+    'application/http',
 }
 
 # MIME types for which text extraction is currently implemented
@@ -78,7 +79,10 @@ def is_plain_text_mime_type(mime_type):
 
 
 def is_html_like_mime_type(mime_type):
-    return mime_type in _HTML_LIKE_MIME_TYPES
+    return (
+        mime_type in _HTML_LIKE_MIME_TYPES or
+        any(mime_type.startswith(t) for t in _HTML_LIKE_MIME_TYPES)
+    )
 
 
 def is_unsupported_mime_type(mime_type):
@@ -86,6 +90,9 @@ def is_unsupported_mime_type(mime_type):
         return False
     elif mime_type in _UNSUPPORTED_MIME_TYPES:
         return True
+    for m in _SUPPORTED_MIME_TYPES:
+        if mime_type.startswith(f'{m};'):
+            return False
     for m in _UNSUPPORTED_MAIN_MIME_TYPES:
         if mime_type.startswith(f'{m}/'):
             return True
@@ -162,6 +169,7 @@ def write_stats(stats, label, out=sys.stderr):
         f'{stats["responses"]} responses,',
         f'{stats["conversions"]} conversions,',
         f'{stats["empties"]} with empty text content,',
+        f'{stats["unsupported"]} with unsupported type,',
         f'{stats["errors"]} errors',
         file=out
     )
@@ -208,8 +216,8 @@ def convert_warc_stream(stream, stats, args):
             continue
 
         if is_unsupported_mime_type(type_):
-            logging.info(f'unsupported payload type: {type_}')
-            unsupported += 1
+            logging.error(f'unsupported payload type: {type_}')
+            stats['unsupported'] += 1
             continue
 
         try:
