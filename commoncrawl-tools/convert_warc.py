@@ -4,6 +4,7 @@
 # with keys 'id', 'text', and 'meta'.
 
 import sys
+import re
 import os
 import gzip
 import json
@@ -11,6 +12,8 @@ import logging
 
 import trafilatura
 import justext
+import inscriptis
+from bs4 import BeautifulSoup
 
 from collections import defaultdict
 from glob import glob
@@ -62,7 +65,7 @@ def argparser():
     ap = ArgumentParser()
     ap.add_argument('input', nargs='+', metavar='FILE-OR-DIR')
     ap.add_argument('-e', '--extractor', default='trafilatura',
-                    choices=('trafilatura', 'justext'))
+                    choices=('trafilatura', 'justext', 'inscriptis', 'bs'))
     ap.add_argument('-r', '--refers-to', default=False, action='store_true',
                     help='use "WARC-Refers-To" as ID (for WET files)')
     ap.add_argument('-v', '--verbose', default=False, action='store_true')
@@ -142,11 +145,52 @@ def trafilatura_extract(content, uri, args):
     return trafilatura.extract(content, url=uri, **options)
 
 
+def normalize_space(text):
+    text = text.strip()
+    text = re.sub(r'\n+', '\n', text)
+    lines = text.split('\n')
+    lines = [' '.join(line.split()) for line in lines]
+    lines = [line for line in lines if line and not line.isspace()]
+    text = '\n'.join(lines)
+    return text
+
+
+def inscriptis_extract(content):
+    try:
+        content = content.decode('utf-8')    # TODO
+        text = inscriptis.get_text(content).strip()
+        text = normalize_space(text)
+        return text
+    except Exception as e:
+        example = content if len(content) < 80 else f'{content[:80]}...'
+        logging.warning(f'error, falling back to bs4: {e}: "{example}"')
+        return soup_extract(content)
+
+
+def soup_extract(content):
+    soup = BeautifulSoup(content, features='html.parser') #features='lxml')
+
+    # drop script and style elements (TODO: is this necessary?)
+    for e in soup(['script', 'style']):
+        e.extract()
+
+    text = soup.get_text()
+
+    # normalize space
+    text = normalize_space(text)
+
+    return text
+
+
 def extract_text_from_html(id_, uri, mime_type, content, args):
     if args.extractor == 'trafilatura':
         return trafilatura_extract(content, uri, args)
     elif args.extractor == 'justext':
         return justext_extract(content)
+    elif args.extractor == 'bs':
+        return soup_extract(content)
+    elif args.extractor == 'inscriptis':
+        return inscriptis_extract(content)
     else:
         raise ValueError(args.extractor)
 
