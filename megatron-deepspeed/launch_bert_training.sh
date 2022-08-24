@@ -18,8 +18,8 @@ ln -s bert-$SLURM_JOBID.err logs/latest.err
 export NCCL_SOCKET_IFNAME=hsn0,hsn1,hsn2,hsn3
 
 module load cray-python 
-export RDZV_HOST=$(hostname)
-export RDZV_PORT=9999               
+# export RDZV_HOST=$(hostname)
+# export RDZV_PORT=9999               
 
 
 echo "START $SLURM_JOBID: $(date)"
