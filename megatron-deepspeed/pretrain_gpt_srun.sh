@@ -19,7 +19,7 @@
   export NPROC_PER_NODE=8
 
 
-  export MICRO_BATCH_SIZE=10
+  export MICRO_BATCH_SIZE=15
   export GRAD_ACC_STEPS=1
   export ZERO_STAGE=1
 
@@ -55,7 +55,7 @@ EOT
 
 mpids=''
 if [ \$SLURM_LOCALID -eq 0 ] ; then
-  ./rocm-monitor.sh &
+  ../rocm-monitor.sh &
   mpids=\$!
 fi
 
@@ -83,13 +83,13 @@ GPT_ARGS="--num-layers 24 \
            --num-attention-heads 16 \
            --seq-length 1024 \
            --max-position-embeddings 1024 \
+           --micro-batch-size $MICRO_BATCH_SIZE \
+           --global-batch-size $((MICRO_BATCH_SIZE*1*NPROC_PER_NODE*NNODES)) \
            --lr 7e-4 \
            --train-iters 100000 \
            --lr-warmup-iters 1000 \
-           --micro-batch-size $MICRO_BATCH_SIZE \
-           --global-batch-size $((MICRO_BATCH_SIZE*1*NPROC_PER_NODE*NNODES)) \
-           --adam-beta2 0.999 \
            --adam-eps 1e-6 \
+           --adam-beta2 0.999 \
            --data-path $DATA_PATH \
            --vocab-file $VOCAB_FILE \
            --merge-file $MERGE_FILE \
@@ -101,8 +101,8 @@ OUTPUT_ARGS="--log-interval 10 \
              --save-interval 5000 \
              --eval-interval 1000 \
              --eval-iters 10"
-# DEEPSPEED_ARGS="--deepspeed --deepspeed_config $config_json"
-DEEPSPEED_ARGS=""
+DEEPSPEED_ARGS="--deepspeed --deepspeed_config $config_json"
+#DEEPSPEED_ARGS=""
 cmd="python3 \
        $wd/pretrain_gpt.py \
        \$GPT_ARGS \
@@ -119,7 +119,6 @@ done
 
 EOF
   chmod +x helper.sh 
-  cat helper.sh
   MASKS="ff000000000000,ff00000000000000,ff0000,ff000000,ff,ff00,ff00000000,ff0000000000"
   srun --mem 80G --account project_462000119 -ppilot --time=01:00:00 -N $NNODES -n $((NNODES*NPROC_PER_NODE)) \
   --gpus=$((8*$NNODES)) \
