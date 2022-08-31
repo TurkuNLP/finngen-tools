@@ -45,7 +45,8 @@ mkdir -p data/owt2
 wget https://a3s.fi/openwebtext2/2020-01.jsonl -P data/owt2
 head -n 100000 data/owt2/2020-01.jsonl > tiny-owt2-sample.jsonl
 ```
-### Preprocess to Megatron format
+
+### Preprocess for GPT
 ```
 python Megatron-DeepSpeed/tools/preprocess_data.py 
     --input tiny-owt2-sample.jsonl 
@@ -54,7 +55,35 @@ python Megatron-DeepSpeed/tools/preprocess_data.py
     --merge-file gpt2/merges.txt 
     --output-prefix tiny-owt2-sample
 ```
+
+### Preprocess for BERT
+```
+python tools/preprocess_data.py \
+       --input tiny-owt2-sample.jsonl \
+       --workers 8 \
+       --output-prefix bert-data_2 \
+       --vocab bert-base-cased-tokenizer/vocab.txt \
+       --dataset-impl mmap \
+       --tokenizer-type BertWordPieceCase \
+       --split-sentences
+```
+
 ### Launch training
 ```
+# BERT
+sbatch launch_bert_training.sh
+
+# GPT
 sbatch launch_gpt_training.sh
+```
+### NOTES:
+* BERT-pretraining on Microsoft/Megatron-DeepSpeed fails if --checkpoint-activations is on
+* BERT doesn't support DeepSpeed Pipelinen Parallel
+* T5 requires a following change 
+```
+file: megatron/model/t5_model.py: 137
+
+-        decoder_output, encoder_output = lm_output
++        decoder_output, encoder_output, *moe_losses = lm_output
+
 ```
