@@ -77,10 +77,12 @@ bash pretrain_bert_srun.sh
 
 # GPT
 sbatch launch_gpt_training.sh
+or 
 bash pretrain_gpt_srun.sh
 
 # T5
 sbatch launch_t5_training.sh
+or 
 TODO: bash pretrain_t5_srun.sh 
 
 ```
