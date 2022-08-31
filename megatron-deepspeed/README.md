@@ -72,9 +72,17 @@ python tools/preprocess_data.py \
 ```
 # BERT
 sbatch launch_bert_training.sh
+or 
+bash pretrain_bert_srun.sh
 
 # GPT
 sbatch launch_gpt_training.sh
+bash pretrain_gpt_srun.sh
+
+# T5
+sbatch launch_t5_training.sh
+TODO: bash pretrain_t5_srun.sh 
+
 ```
 ### NOTES:
 * BERT-pretraining on Microsoft/Megatron-DeepSpeed fails if --checkpoint-activations is on
@@ -87,3 +95,4 @@ file: megatron/model/t5_model.py: 137
 +        decoder_output, encoder_output, *moe_losses = lm_output
 
 ```
+* T5 not yet properly tested to run on LUMI, but latest error message on Lumi also appeared on Puhti and was solved by above change.
