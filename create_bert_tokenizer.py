@@ -8,10 +8,17 @@ from pathlib import Path
 from argparse import ArgumentParser
 
 from tokenizers import BertWordPieceTokenizer
+import time
+
+def log(message):
+    y, n, d, h, m, s = time.localtime()[:6]
+    print(f"[{y}-{n}-{d} {h}:{m}:{s}] {message}")
 
 
 # BERT special tokens
 UNK, CLS, SEP, PAD, MASK = '[UNK]', '[CLS]', '[SEP]', '[PAD]', '[MASK]'
+# Add unused token#
+UNUSED = [f'[unused{i}]' for i in range(1,103)]
 
 SPECIAL_TOKENS_MAP = {
     'unk_token': UNK,
@@ -25,7 +32,7 @@ SPECIAL_TOKENS_MAP = {
 def argparser():
     ap = ArgumentParser()
     ap.add_argument(
-        'files',
+        '--files',
         help='Files with input texts'
     )
     ap.add_argument(
@@ -58,11 +65,13 @@ def argparser():
     )
     ap.add_argument(
         '--min_frequency',
+        type=int,
         default=2,
         help='Minimum token frequency'
     )
     ap.add_argument(
         '--limit_alphabet',
+        type=int,
         default=1000,
         help='Maximum number of different characters in alphabet'
     )
@@ -79,7 +88,6 @@ def save_for_autotokenizer(tokenizer, args):
     Path(args.output_dir).mkdir(parents=True, exist_ok=True)
 
     tokenizer.save(os.path.join(args.output_dir, 'tokenizer.json'))
-
     tokenizer.save_model(args.output_dir)
 
     with open(os.path.join(args.output_dir, 'special_tokens_map.json'), 'w') as f:
@@ -111,16 +119,18 @@ def main(argv):
         strip_accents=args.strip_accents,
         lowercase=args.lowercase,
     )
+    log('Starting to train tokenizer with config: {tokenizer}')
 
     tokenizer.train(
         args.files,
         vocab_size=args.vocab_size,
         min_frequency=args.min_frequency,
         show_progress=True,
-        special_tokens=[UNK, CLS, SEP, PAD, MASK],
+        special_tokens=[UNK, CLS, SEP, PAD, MASK,*UNUSED],
         limit_alphabet=args.limit_alphabet,
     )
-
+    log('...Done!')
+    log('saving tokenizer with args: {args}')
     save_for_autotokenizer(tokenizer, args)
 
 
