@@ -71,7 +71,7 @@ def convert_reddit(fn, args):
             seen.add(id_)
 
             body = data.pop('body')
-            if body == '[deleted]':
+            if body in ('[deleted]', '[removed]'):
                 deleted_count += 1
                 continue
             
