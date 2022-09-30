@@ -14,6 +14,8 @@ from argparse import ArgumentParser
 
 def argparser():
     ap = ArgumentParser()
+    ap.add_argument('--keep-underscores', default=False, action='store_true',
+                    help='do not remove underscore characters.')
     ap.add_argument('text', nargs='+')
     return ap
 
@@ -143,6 +145,11 @@ def convert_lonnrot(fn, args):
     license_text, produced_by, paragraphs = split_metadata(paragraphs)
 
     text = '\n\n'.join(paragraphs)
+
+    if not args.keep_underscores:
+        # Underscores are used almost exclusively to denote italics in
+        # the source texts and removed by default.
+        text = text.replace('_', '')
 
     data = {
         'id': 'lonnrot:' + os.path.splitext(os.path.basename(fn))[0],
