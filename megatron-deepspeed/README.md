@@ -48,11 +48,11 @@ head -n 100000 data/owt2/2020-01.jsonl > tiny-owt2-sample.jsonl
 
 ### Preprocess for GPT
 ```
-python Megatron-DeepSpeed/tools/preprocess_data.py 
-    --input tiny-owt2-sample.jsonl 
-    --tokenizer-type GPT2BPETokenizer 
-    --vocab-file gpt2/vocab.json 
-    --merge-file gpt2/merges.txt 
+python Megatron-DeepSpeed/tools/preprocess_data.py \
+    --input tiny-owt2-sample.jsonl \
+    --tokenizer-type GPT2BPETokenizer \
+    --vocab-file gpt2/vocab.json \
+    --merge-file gpt2/merges.txt \
     --output-prefix tiny-owt2-sample
 ```
 
