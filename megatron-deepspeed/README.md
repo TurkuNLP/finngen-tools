@@ -19,6 +19,7 @@ python -m pip install deepspeed
 ### Install apex (on compute node)
 ```
 git clone https://github.com/ROCmSoftwarePlatform/apex
+git checkout 5de49cc90051adf094920675e1e21175de7bad1b
 srun --account=project_462000119 --cpus-per-task=20 --partition=pilot --gres=gpu:mi250:1 --time=2:00:00 --pty bash
 ```
 ```
