@@ -43,7 +43,6 @@ d=submissions-data; ls $d | head -n 1; ls $d | tail -n 1; ls $d | wc -l
 ```
 
 ```
-d=submissions-data; ls $d | head -n 1; ls $d | tail -n 1; ls $d | wc -l
 RS_2005-06.zst
 RS_2022-08.zst
 207
