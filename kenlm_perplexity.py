@@ -31,7 +31,7 @@ def is_punct(string):
 
 
 def word_count(tokenized, args):
-    return sum(not is_punct(t)) for t in tokenized)
+    return sum(not is_punct(t) for t in tokenized)
 
 
 def tokenize(text, args):
@@ -56,7 +56,10 @@ def add_perplexity(fn, model, args):
                 total_words += word_count(tokenized, args) + 1 # +1 for EOS
             perplexity = 10**(-total_score/total_words)
 
-            assert args.key not in data['meta']
+            if 'meta' not in data:
+                data['meta'] = {}
+            else:
+                assert args.key not in data['meta']
             data['meta'][args.key] = int(perplexity)
 
             if ln % 100 == 0:
