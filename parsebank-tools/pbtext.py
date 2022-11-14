@@ -5,12 +5,16 @@
 import sys
 import gzip
 import json
+import re
 import xml.etree.ElementTree as ET
+import logging
 
 from argparse import ArgumentParser
 
 
 TEXT_LINE_START = '# text = '
+
+ATTR_RE = re.compile(r'([a-zA-Z_-]+)="(.*?)"\s*')
 
 
 def argparser():
@@ -40,8 +44,18 @@ def doc_attributes(line):
     assert line.startswith('# <doc ')
     assert line.endswith('>')
     line = line[2:-1] + ' />'
-    elem = ET.fromstring(line)
-    return elem.attrib
+    try:
+        elem = ET.fromstring(line)
+        return elem.attrib
+    except:
+        # Not well-formed XML; probably attribute escaping issues.
+        # Attempt to "parse" with regex
+        attr_str = line[len('<doc '):-len(' />')]
+        attrib = {}
+        for m in ATTR_RE.finditer(attr_str):
+            name, value = m.groups()
+            attrib[name] = value
+        return attrib
 
 
 def output_document(doc_start, paragraphs, args):
@@ -54,9 +68,15 @@ def output_document(doc_start, paragraphs, args):
         data = {}
         if 'id' in attrib:
             data['id'] = attrib.pop('id')
+        elif 'urn' in attrib:
+            data['id'] = attrib.pop('urn')
         else:
-            collection, url = attrib.pop('collection'), attrib.pop('url')
-            data['id'] = f'{collection}:{url}'
+            try:
+                collection, url = attrib.pop('collection'), attrib.pop('url')
+                data['id'] = f'{collection}:{url}'
+            except:
+                logging.error(f'incomplete attribs: {doc_start} ({attrib})')
+                data['id'] = 'ERROR'
         data['meta'] = attrib
         data['text'] = text
         print(json.dumps(data, ensure_ascii=False))
