@@ -1,34 +1,32 @@
 # Megatron DeepSpeed on Lumi
-## Setupping a working environment for Microsoft/Megatron-DeepSpeed
-### Modules
-module load cray-python
-### Initialize venv
-```
-python -m venv --system-site-packages venv
-source venv/bin/activate
- ```
-### Install torch, transformers, deepspeed, etc.
+This directory is for sharing setups and keep on track what's working with our experiments on Lumi and especially with my personal efforts for getting T5-Megatron working.
+
+## Important notes:
+* BERT-pretraining on Microsoft/Megatron-DeepSpeed fails if --checkpoint-activations is on
+* BERT doesn't support DeepSpeed Pipeline Parallel
+* T5 has a bug that needs to be fixed with the following: 
 
 ```
-python -m pip install --upgrade pip setuptools wheel
-python -m pip install torch --extra-index-url https://download.pytorch.org/whl/rocm5.1.1
-python -m pip install numpy datasets evaluate accelerate sklearn nltk
-python -m pip install --upgrade git+https://github.com/huggingface/transformers
-python -m pip install deepspeed
+file: megatron/model/t5_model.py: 137
+
+-        decoder_output, encoder_output = lm_output
++        decoder_output, encoder_output, *moe_losses = lm_output
+
 ```
-### Install apex (on compute node)
+
+
+## Setup
+### Create a virtual environment 
+
+setup-venv-lumi.sh takes care of installing required packages including apex for rocm. 
+Installation requires a GPU, so change the account from slurm variables. 
+Default installation name for venv is "venv", you may alter it to your liking. 
+
 ```
-git clone https://github.com/ROCmSoftwarePlatform/apex
-git checkout 5de49cc90051adf094920675e1e21175de7bad1b
-srun --account=project_462000119 --cpus-per-task=20 --partition=pilot --gres=gpu:mi250:1 --time=2:00:00 --pty bash
+bash setup-venv-lumi.sh
+
 ```
-```
-module load cray-python
-source venv/bin/activate
-cd apex
-python setup.py install --cpp_ext --cuda_ext
-exit
-```
+
 ### Clone Megatron
 ```
 git clone https://github.com/microsoft/Megatron-DeepSpeed
@@ -36,11 +34,15 @@ cd Megatron-DeepSpeed
 ```
 ## Setup things for GPT
 ### Download tokenizer files
+
+Default gpt-tokenizer for example. Any BPE-tokenizer should work.
+
 ```
 mkdir gpt2
 wget https://huggingface.co/gpt2/resolve/main/{vocab.json,merges.txt} -P gpt2
 ```
-### Download data, truncate
+### Download example data and sample
+Any .jsonl-formatted data with `text`-column should work directly
 ```
 mkdir -p data/owt2
 wget https://a3s.fi/openwebtext2/2020-01.jsonl -P data/owt2
@@ -73,29 +75,29 @@ python tools/preprocess_data.py \
 ```
 # BERT
 sbatch launch_bert_training.sh
-or 
-bash pretrain_bert_srun.sh
 
 # GPT
 sbatch launch_gpt_training.sh
-or 
-bash pretrain_gpt_srun.sh
-
+```
 # T5
-sbatch launch_t5_training.sh
-or 
-TODO: bash pretrain_t5_srun.sh 
+### Running t5:
 
 ```
-### NOTES:
-* BERT-pretraining on Microsoft/Megatron-DeepSpeed fails if --checkpoint-activations is on
-* BERT doesn't support DeepSpeed Pipelinen Parallel
-* T5 requires a following change 
-```
-file: megatron/model/t5_model.py: 137
+# If you haven't yet done this, clone the repo. 
+git clone https://github.com/microsoft/Megatron-DeepSpeed
+cd Megatron-DeepSpeed
 
--        decoder_output, encoder_output = lm_output
-+        decoder_output, encoder_output, *moe_losses = lm_output
+# Else
+cd /path/to/Megatron-DeepSpeed
+
+# If you havent yet patched t5_model.py, this line does the trick
+perl -p -i -e "s/decoder_output, encoder_output = lm_output/decoder_output, encoder_output, *moe_losses = lm_output/g" megatron/model/t5_model.py 
+
+# Download and edit below scripts to your needs and matching your account 
+wget https://raw.githubusercontent.com/TurkuNLP/finngen-tools/main/megatron-deepspeed/launch_t5_training.sh
+wget https://raw.githubusercontent.com/TurkuNLP/finngen-tools/main/megatron-deepspeed/pretrain_t5_lumi.sh
+
+
+sbatch launch_t5_training_lumi.sh
 
 ```
-* T5 not yet properly tested to run on LUMI, but latest error message on Lumi also appeared on Puhti and was solved by above change.
