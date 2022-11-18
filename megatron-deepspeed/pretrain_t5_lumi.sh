@@ -2,7 +2,7 @@
 set -eou pipefail
 
 module load cray-python
-
+source venv/bin/activate
 # source /scratch/project_462000119/sampo/nov-2022-gpt-01/venv/bin/activate
 echo "Number of gpus-on node $SLURMD_NODENAME: $SLURM_GPUS_PER_NODE"
 
