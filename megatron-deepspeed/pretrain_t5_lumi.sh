@@ -70,7 +70,7 @@ T5_LARGE_NL36="--num-layers 36 --hidden-size 1024 --num-attention-heads 16 --kv-
 
 ARCHITECTURE=$T5_BASE
 
-CHECKPOINT_PATH=./checkpoints/t5-$ARCHITECTURE-$SLURM_JOBID
+CHECKPOINT_PATH=./checkpoints/t5-$SLURM_JOBID
 mkdir -p $CHECKPOINT_PATH
 
       #  --load $CHECKPOINT_PATH \
