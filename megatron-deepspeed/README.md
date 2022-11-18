@@ -94,7 +94,7 @@ cd /path/to/Megatron-DeepSpeed
 perl -p -i -e "s/decoder_output, encoder_output = lm_output/decoder_output, encoder_output, *moe_losses = lm_output/g" megatron/model/t5_model.py 
 
 # Download and edit below scripts to your needs and matching your account 
-wget https://raw.githubusercontent.com/TurkuNLP/finngen-tools/main/megatron-deepspeed/launch_t5_training.sh
+wget https://raw.githubusercontent.com/TurkuNLP/finngen-tools/main/megatron-deepspeed/launch_t5_training_lumi.sh
 wget https://raw.githubusercontent.com/TurkuNLP/finngen-tools/main/megatron-deepspeed/pretrain_t5_lumi.sh
 
 
