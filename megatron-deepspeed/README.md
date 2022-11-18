@@ -96,6 +96,7 @@ perl -p -i -e "s/decoder_output, encoder_output = lm_output/decoder_output, enco
 # Download and edit below scripts to your needs and matching your account 
 wget https://raw.githubusercontent.com/TurkuNLP/finngen-tools/main/megatron-deepspeed/launch_t5_training_lumi.sh
 wget https://raw.githubusercontent.com/TurkuNLP/finngen-tools/main/megatron-deepspeed/pretrain_t5_lumi.sh
+chmod +x pretrain_t5_lumi.sh
 
 
 sbatch launch_t5_training_lumi.sh
