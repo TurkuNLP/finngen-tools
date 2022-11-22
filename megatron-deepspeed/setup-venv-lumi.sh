@@ -20,7 +20,17 @@ done
 
 # Load modules
 module --quiet purge
+
+module load CrayEnv
+module load PrgEnv-cray/8.3.3
+module load craype-accel-amd-gfx90a
 module load cray-python
+
+module use /pfs/lustrep2/projappl/project_462000125/samantao-public/mymodules
+module load suse-repo-deps/sam-default
+module load rocm/sam-5.2.3.lua
+module load rccl/sam-develop.lua
+module load aws-ofi-rccl/sam-default.lua
 
 # Create and activate venv
 python -m venv --system-site-packages venv
@@ -30,7 +40,7 @@ source venv/bin/activate
 python -m pip install --upgrade pip setuptools wheel
 
 # Install pip packages
-python -m pip install --upgrade torch --extra-index-url https://download.pytorch.org/whl/rocm5.1.1
+python -m pip install --upgrade torch --extra-index-url https://download.pytorch.org/whl/rocm5.2/
 python -m pip install --upgrade numpy datasets evaluate accelerate sklearn nltk
 python -m pip install --upgrade git+https://github.com/huggingface/transformers
 python -m pip install --upgrade deepspeed
@@ -55,7 +65,17 @@ cat <<EOF > install_apex.sh
 #SBATCH --error=logs/install_apex.err
 
 module --quiet purge
+
+module load CrayEnv
+module load PrgEnv-cray/8.3.3
+module load craype-accel-amd-gfx90a
 module load cray-python
+
+module use /pfs/lustrep2/projappl/project_462000125/samantao-public/mymodules
+module load suse-repo-deps/sam-default
+module load rocm/sam-5.2.3.lua
+module load rccl/sam-develop.lua
+module load aws-ofi-rccl/sam-default.lua
 
 source venv/bin/activate
 
