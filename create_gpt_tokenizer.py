@@ -2,7 +2,7 @@ import os
 from tokenizers.models import BPE
 from tokenizers import Tokenizer
 from tokenizers.decoders import ByteLevel as ByteLevelDecoder
-from tokenizers.normalizers import NFKC, Sequence
+from tokenizers.normalizers import NFC, NFD, NFKC, NFKD, Sequence
 from tokenizers.pre_tokenizers import ByteLevel
 from tokenizers.trainers import BpeTrainer
 from transformers import PreTrainedTokenizerFast
@@ -12,12 +12,20 @@ import argparse
 __author__ = "Risto Luukkonen"
 
 
+NORMALIZER = {
+    'NFC': NFC,
+    'NFD': NFD,
+    'NFKC': NFKC,
+    'NFKD': NFKD,
+}
+
+
 class BPETokenizer(object):
-    def __init__(self):
+    def __init__(self, normalization):
         self.tokenizer = Tokenizer(BPE())
-        self.tokenizer.normalizer = Sequence([
-            NFKC()
-        ])
+        if normalization is not None:
+            normalizer = NORMALIZER[normalization]()
+            self.tokenizer.normalizer = Sequence([normalizer])
         self.tokenizer.pre_tokenizer = ByteLevel()
         self.tokenizer.decoder = ByteLevelDecoder()
 
@@ -41,8 +49,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--data',type=str)
     parser.add_argument('--output_dir',type=str,required=True)
+    parser.add_argument('--normalization', default=None, choices=NORMALIZER.keys())
     parser.add_argument('--vocab_size',type=int,default=50257)
-    parser.add_argument('--save_vocab_only',default=True, action='store_true',help="If true, saves merges.txt and vocab.json,\n \
+    parser.add_argument('--save_vocab_only',default=False, action='store_true',help="If true, saves merges.txt and vocab.json,\n \
                         else saves a single file that can be load with Tokenizer.from_file() but isn't so easy to use with AutoTokenizer-api")
     #TODO see how Tokenizer.from_file() can be used with transformers.AutoTokenizer()
 
@@ -60,11 +69,11 @@ def main():
     else:
         paths = [args.data]
 
-    tokenizer = BPETokenizer()
+    tokenizer = BPETokenizer(args.normalization)
     # train the tokenizer model
     tokenizer.bpe_train(args.vocab_size, paths)
     # saving the tokenized data in our specified folder
-    tokenizer.save_tokenizer(args.output_dir)
+    tokenizer.save_tokenizer(args.output_dir, args.save_vocab_only)
 
 
 if __name__=='__main__':
