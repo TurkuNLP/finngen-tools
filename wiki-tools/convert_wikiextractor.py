@@ -22,10 +22,28 @@ def argparser():
     return ap
 
 
+def normalize_paragraph_space(text):
+    # remove trailing whitespace, limit number of consecutive spaces,
+    # and replace non-breaking with regular space
+    lines = text.split('\n')
+    lines = [l.rstrip() for l in lines]
+    lines = [l.replace('\xa0', ' ') for l in lines]
+    lines = [re.sub(r'\s{2,}', '  ', l) for l in lines]
+    return '\n'.join(lines)
+
+
+def normalize_space(text):
+    paragraphs = re.split(r'\n(\s+\n|\n)+', text)
+    paragraphs = [normalize_paragraph_space(p) for p in paragraphs]
+    paragraphs = [p for p in paragraphs if p and not p.isspace()]
+    return '\n\n'.join(paragraphs)
+
+
 def output_document(start_line, lines, args):
     m = DOC_START_RE.match(start_line)
     id_, url, title = m.groups()
     text = '\n'.join(lines)
+    text = normalize_space(text)
     data = {
         'id': f'fiwiki:{title}',
         'text': text,
