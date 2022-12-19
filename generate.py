@@ -2,6 +2,8 @@
 
 import sys
 
+import torch
+
 from argparse import ArgumentParser
 
 from transformers import AutoTokenizer, AutoModelForCausalLM
@@ -22,17 +24,25 @@ def generate(prompts, tokenizer, model, args):
     decode = lambda v: tokenizer.decode(v)
     for prompt in prompts:
         prompt = prompt.rstrip('\n')
+
+        if prompt.isspace() or not prompt:
+            continue
+
+        encoded = encode(prompt)
+        if torch.cuda.is_available():
+            encoded = encoded.to('cuda')
+
         generated = model.generate(
-            encode(prompt),
+            encoded,
             do_sample=True,
             max_length=100,
-            top_k=50, 
+            top_k=50,
             top_p=0.95,
             temperature=args.temperature,
             no_repeat_ngram_size=2,
             num_return_sequences=args.num_return_sequences,
             repetition_penalty=0.9,
-            bad_words_ids=[[tokenizer.eos_token_id]]
+            #bad_words_ids=[[tokenizer.eos_token_id]]
         )
         for g in generated:
             decoded = decode(g)
@@ -46,6 +56,11 @@ def main(argv):
 
     tokenizer = AutoTokenizer.from_pretrained(args.model)
     model = AutoModelForCausalLM.from_pretrained(args.model)
+
+    if torch.cuda.is_available():
+        model.to('cuda')
+
+    print('model loaded.', file=sys.stderr)
 
     if not args.file:
         generate(sys.stdin, tokenizer, model, args)
