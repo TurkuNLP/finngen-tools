@@ -5,30 +5,43 @@
 # well as large monetary and other values.
 
 import sys
+import json
 import regex
 
+from multiprocessing import Pool
 from argparse import ArgumentParser
 
 
 NUMBER_START_RE = regex.compile(r'\b[[:digit:]]')
 
-NUMBER_RE = regex.compile(r'^(?:[[:digit:]][[:space:]().+–—-]*){6,12}[[:digit:]]\b')
+NUMBER_RE = regex.compile(r'^(?:[[:digit:]](?:[^\S\r\n]|[().+–—-])*){6,12}[[:digit:]]\b')
 
 YEAR_RE = r'(?:20[[:digit:]]{2}|1[0-9][[:digit:]]{2}|[[:digit:]]{2})'
 MONTH_RE = r'[01]?[[:digit:]]'
 DAY_RE = r'[0-3]?[[:digit:]]'
-DATE_SEP = r'\s*[.–—-]\s*'
+DATE_SEP = r'[^\S\r\n]*[.–—-][^\S\r\n]*'
 
 DATE_RE_DMY = regex.compile(DAY_RE+DATE_SEP+MONTH_RE+DATE_SEP+YEAR_RE+r'\b')
 DATE_RE_YMD = regex.compile(YEAR_RE+DATE_SEP+MONTH_RE+DATE_SEP+DAY_RE+r'\b')
 DATE_RE_YDM = regex.compile(YEAR_RE+DATE_SEP+DAY_RE+DATE_SEP+MONTH_RE+r'\b')
 
-YEAR_RANGE_RE = regex.compile(r'^(?:1[0-9][[:digit:]]{2}|20[[:digit:]]{2})\s*[.–—-]\s*(?:1[0-9][[:digit:]]{2}|20[[:digit:]]{2})\b')
+YEAR_RANGE_RE = regex.compile(r'^(?:1[0-9][[:digit:]]{2}|20[[:digit:]]{2})[^\S\r\n]*[.–—-][^\S\r\n]*(?:1[0-9][[:digit:]]{2}|20[[:digit:]]{2})\b')
+
+NUM_WITH_UNIT_RE = regex.compile(r'(?:[[:digit:]]+(?:[[:punct:]]|[^\S\r\n])*)+(?:metri|euro|markka|markal|mk\.|dollar|kruunu|ihmistä|henkeä|henkilöä|asukasta|katsojaa|sotilasta|suomalaista|vuotta|merkkiä|kappaletta|kpl\.|e\b(?!-)|€|\$)')
+
+KEEP_SPAN_RES = [
+    DATE_RE_DMY,
+    DATE_RE_YMD,
+    DATE_RE_YDM,
+    YEAR_RANGE_RE,
+    NUM_WITH_UNIT_RE,
+]
 
 
 def argparser():
     ap = ArgumentParser()
-    ap.add_argument('text', nargs='+')
+    ap.add_argument('-n', '--num-workers', type=int, default=16)
+    ap.add_argument('jsonl', nargs='+')
     return ap
 
 
@@ -48,7 +61,7 @@ def mask_number(string, num_leading=2, replace_char='0'):
 
 def keep_span_length(string):
     length = None
-    for RE in (DATE_RE_DMY, DATE_RE_YMD, DATE_RE_YDM, YEAR_RANGE_RE):
+    for RE in KEEP_SPAN_RES:
         m = RE.match(string)
         if not m:
             continue
@@ -86,13 +99,22 @@ def mask_numbers(string):
     return string
 
 
+def mask_json_numbers(line):
+    data = json.loads(line)
+    text = data['text']
+    text = mask_numbers(text)
+    data['text'] = text
+    return json.dumps(data, ensure_ascii=False)
+
+
 def main(argv):
     args = argparser().parse_args(argv[1:])
 
-    for fn in args.text:
-        with open(fn) as f:
-            for l in f:
-                print(mask_numbers(l), end='')
+    with Pool(args.num_workers) as pool:
+        for fn in args.jsonl:
+            with open(fn) as f:
+                for l in pool.imap(mask_json_numbers, f, chunksize=1024):
+                    print(l)
 
 
 if __name__ == '__main__':
