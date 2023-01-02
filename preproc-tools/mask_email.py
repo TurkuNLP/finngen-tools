@@ -3,8 +3,11 @@
 # High recall, low precision email masking.
 
 import sys
+import os
+import json
 import regex
 
+from multiprocessing import Pool
 from argparse import ArgumentParser
 
 
@@ -26,10 +29,13 @@ MAYBE_EMAIL_RE = regex.compile(
 MASK_LOCAL_PART = 'email'
 MASK_DOMAIN = 'example.com'
 
+TLDS = None    # top-level domains
+
 
 def argparser():
     ap = ArgumentParser()
-    ap.add_argument('text', nargs='+')
+    ap.add_argument('-n', '--num-workers', type=int, default=16)
+    ap.add_argument('jsonl', nargs='+')
     return ap
 
 
@@ -47,18 +53,19 @@ def domain_prefix(string, tlds):
     return candidates[0]    # rough heuristic
 
 
-def mask_emails(string, tlds):
+def mask_emails(string):
     if not AT_VAR_RE.search(string):
         return string    # no match possible, avoid expensive RE
 
     replacements = []
     for m in MAYBE_EMAIL_RE.finditer(string):
         local_part, at_symbol, domain = m.groups()
-        domain = domain_prefix(m.group(3), tlds)
+        domain = domain_prefix(m.group(3), TLDS)
         if domain is None:
             continue    # not a possible email
         orig_text = local_part + at_symbol + domain
-        print('HIT:', orig_text, file=sys.stderr)
+        #print('HIT:', orig_text, file=sys.stderr)
+        at_symbol = at_symbol.replace('\n', '')
         mask_text = MASK_LOCAL_PART + at_symbol + MASK_DOMAIN
         replacements.append((m.start(), m.start()+len(orig_text), mask_text))
 
@@ -81,15 +88,27 @@ def load_top_level_domains(fn):
     return tlds
 
 
+def mask_json_emails(line):
+    data = json.loads(line)
+    text = data['text']
+    text = mask_emails(text)
+    data['text'] = text
+    return json.dumps(data, ensure_ascii=False)
+
+
 def main(argv):
+    global TLDS
+
     args = argparser().parse_args(argv[1:])
 
-    tlds = load_top_level_domains('tlds-alpha-by-domain.txt')
+    scriptdir = os.path.dirname(os.path.realpath(__file__))
+    TLDS = load_top_level_domains(f'{scriptdir}/tlds-alpha-by-domain.txt')
 
-    for fn in args.text:
-        with open(fn) as f:
-            for l in f:
-                print(mask_emails(l, tlds), end='')
+    with Pool(args.num_workers) as pool:
+        for fn in args.jsonl:
+            with open(fn) as f:
+                for l in pool.imap(mask_json_emails, f, chunksize=1024):
+                    print(l)
 
 
 if __name__ == '__main__':
