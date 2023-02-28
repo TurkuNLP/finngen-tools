@@ -2,6 +2,8 @@
 
 import sys
 
+import torch
+
 from argparse import ArgumentParser
 
 from transformers import AutoTokenizer, AutoModelForCausalLM
@@ -52,11 +54,17 @@ def generate():
         no_repeat_ngram_size = 0
 
     input_ = app.tokenizer(prompt, return_tensors='pt')
+    input_tokens = input_.input_ids.shape[1]
+
+    if torch.cuda.is_available():
+        input_ = input_.to('cuda')
+
     output = app.model.generate(
         **input_,
         do_sample=True,
         temperature=temperature,
-        min_new_tokens=min_new_tokens,
+        min_length = input_tokens+min_new_tokens,
+        #min_new_tokens=min_new_tokens,
         max_new_tokens=max_new_tokens,
         no_repeat_ngram_size=no_repeat_ngram_size,
     )
@@ -77,6 +85,9 @@ def main(argv):
 
     app.tokenizer = AutoTokenizer.from_pretrained(args.model)
     app.model = AutoModelForCausalLM.from_pretrained(args.model)
+
+    if torch.cuda.is_available():
+        app.model.to('cuda')
 
     app.run(port=args.port)
 
