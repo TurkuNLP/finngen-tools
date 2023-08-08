@@ -15,10 +15,35 @@ from tokenizers.trainers import BpeTrainer
 from transformers import BloomTokenizerFast
 
 
+ADDITIONAL_SPECIAL_TOKENS = [
+    '<|user|>',
+    '<|assistant|>',
+    '<fim_prefix>',
+    '<fim_middle>',
+    '<fim_suffix>',
+    '<fim_pad>',
+    '<filename>',
+    '<gh_stars>',
+    '<issue_start>',
+    '<issue_comment>',
+    '<issue_closed>',
+    '<jupyter_start>',
+    '<jupyter_text>',
+    '<jupyter_code>',
+    '<jupyter_output>',
+    '<empty_output>',
+    '<commit_before>',
+    '<commit_msg>',
+    '<commit_after>',
+    '<reponame>'
+    ]
+
 def argparser():
     ap = ArgumentParser()
     ap.add_argument('input_jsonl')
     ap.add_argument('output_dir')
+    ap.add_argument('--add_special_tokens', action='store_true', 
+                    help='Adds an additional hardcoded special token list to vocab')
     ap.add_argument('--vocab_size', default=64000, type=int)
     ap.add_argument('--batch_size', default=1000, type=int)
     ap.add_argument('--unk_token', default='<unk>')
@@ -71,8 +96,11 @@ def main(argv):
         args.unk_token,
         args.bos_token,
         args.eos_token,
-        args.pad_token
+        args.pad_token,
+
     ]
+    if args.add_special_tokens:
+        special_tokens+=ADDITIONAL_SPECIAL_TOKENS
 
     trainer = BpeTrainer(
         vocab_size=args.vocab_size,
@@ -94,6 +122,9 @@ def main(argv):
         pad_token=args.pad_token,
         padding_side='left',
     )
+    if args.add_special_tokens:
+        tokenizer_fast.add_special_tokens({"additional_special_tokens": ADDITIONAL_SPECIAL_TOKENS})
+
     tokenizer_fast.save_pretrained(args.output_dir)
 
     # need this to match BLOOM tokenizer.json
